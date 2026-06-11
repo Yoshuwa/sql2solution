@@ -190,6 +190,50 @@ Override global endpoint defaults for a specific entity when one table needs dif
 </details>
 
 <details>
+<summary><strong>Endpoint Field Configuration Per Entity</strong></summary>
+
+Configure fields for each generated entity endpoint, including whether a field should be searchable, filterable, editable, visible, or assigned a default value. This lets sql2solution generate APIs and client behavior that better match the real purpose of each SQL table.
+
+**Benefit:** Developers can prevent accidental field exposure, reduce repetitive manual DTO edits, and produce cleaner entity-specific APIs from the start.
+
+![endpoint field configuration for search filter editable fields and default values in sql2solution](assets/solution-configuration/endpoint-field-configuration-search-filter-default-values-sql2solution.png)
+
+</details>
+
+<details>
+<summary><strong>Audit Fields With Defaults And Validation</strong></summary>
+
+Seed standard audit fields or create and modify custom audit fields with validation rules. Teams can define lifecycle fields, soft-delete fields, required values, read-only behavior, and defaults before generating the solution.
+
+**Benefit:** Consistent audit fields make generated .NET APIs easier to govern, easier to debug, and safer for business workflows that need traceability.
+
+![audit fields validation defaults for ASP.NET Core API generation in sql2solution](assets/solution-configuration/audit-fields-validation-defaults-aspnet-core-api-generator-sql2solution.png)
+
+</details>
+
+<details>
+<summary><strong>Per-Entity Multi-Tenant, Cache, Claim, Delete, And Pagination Controls</strong></summary>
+
+Control entity-specific behavior for multi-tenant solutions, including caching, query variation, validate-on-write behavior, claims, soft delete or hard delete, and pagination. This gives each generated entity the right runtime behavior instead of forcing one global pattern everywhere.
+
+**Benefit:** Teams can generate safer tenant-aware APIs, tune performance-sensitive entities, and keep delete and pagination behavior aligned with real business rules.
+
+![per entity multi tenant caching claims soft delete and pagination configuration in sql2solution](assets/solution-configuration/per-entity-multi-tenant-caching-claims-soft-delete-pagination-sql2solution.png)
+
+</details>
+
+<details>
+<summary><strong>Entity Configuration Version History And Revert</strong></summary>
+
+Keep versions of each entity configuration so developers can compare changes and revert to an earlier setup when needed. This is useful when testing generation options, changing endpoint behavior, or recovering a known-good configuration after experimentation.
+
+**Benefit:** Version history reduces risk while tuning generated APIs, because teams can iterate on configuration without losing a working baseline.
+
+![entity configuration version history and revert for sql2solution API generator](assets/solution-configuration/entity-configuration-version-history-revert-sql2solution.png)
+
+</details>
+
+<details>
 <summary><strong>Generate Different API Versions</strong></summary>
 
 Configure API versioning so generated ASP.NET Core endpoints can support versioned contracts. Versioning is important when clients depend on stable APIs while the database and product continue to evolve.
