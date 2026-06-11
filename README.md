@@ -51,6 +51,155 @@ Instead of relying on AI-generated source code, sql2solution uses handcrafted de
 | Operations | Generate patterns for health checks, structured logging, correlation IDs, problem details, and runtime readiness. |
 | Validation | Use smoke-test and back-to-back validation points to confirm APIs, clients, Swagger, and generated output still align. |
 
+## Solution Configuration
+
+The Solution Configuration workflow is where sql2solution turns a SQL Server schema into a controlled .NET generation plan. These walkthroughs show how developers can load a project, validate database metadata, choose architecture, configure API styles, manage DTO rules, and set solution-wide defaults before generating code.
+
+Use the toggles below to explore each configuration area.
+
+<details open>
+<summary><strong>Solution Configuration Overview</strong></summary>
+
+Configure the core solution settings before generation begins: project shape, naming, target framework, API behavior, client output, and generation conventions. This gives teams a repeatable setup for SQL-backed ASP.NET Core API projects instead of rebuilding the same decisions by hand for every database.
+
+**Benefit:** Developers can standardize the generated solution early, reduce setup mistakes, and keep project structure consistent across client work, internal tools, and SaaS products.
+
+![sql2solution .NET Core API generator solution configuration walkthrough](assets/solution-configuration/solution-configuration-dotnet-core-api-generator-sql2solution.gif)
+
+</details>
+
+<details>
+<summary><strong>Load An Existing sql2solution Project</strong></summary>
+
+Open an existing sql2solution configuration and continue working from saved project settings. This is useful when a schema changes, a client requests new behavior, or a team wants to regenerate parts of a solution without starting from scratch.
+
+**Benefit:** Saved configurations make the generator practical for real projects that evolve over time, not just one-off demos.
+
+![load existing sql2solution project configuration for SQL Server to .NET API generation](assets/solution-configuration/load-existing-sql2solution-project-configuration.gif)
+
+</details>
+
+<details>
+<summary><strong>SQL Table Entity Loading And Validation</strong></summary>
+
+Load table metadata and validate entities before code generation. sql2solution can surface table structure, fields, keys, relationships, and schema issues so developers can make generation decisions from real database metadata.
+
+**Benefit:** Early validation helps avoid broken generated endpoints, missing relationships, incorrect DTOs, and late surprises after code has already been produced.
+
+![SQL table entity validation before ASP.NET Core API code generation in sql2solution](assets/solution-configuration/sql-table-entity-validation-before-code-generation-sql2solution.gif)
+
+</details>
+
+<details>
+<summary><strong>Manage SQL Server Connection Strings By Environment</strong></summary>
+
+Create and organize multiple SQL Server connection strings for different environments, clients, databases, or deployment targets. Environment-aware configuration keeps development, staging, test, and production settings easier to manage.
+
+**Benefit:** Teams can switch contexts quickly and reduce connection-string mistakes when generating APIs from multiple SQL Server databases.
+
+![manage SQL Server connection strings and environments in sql2solution](assets/solution-configuration/manage-sql-server-connection-strings-environments-sql2solution.gif)
+
+</details>
+
+<details>
+<summary><strong>Supported Architecture Options</strong></summary>
+
+Choose the generated architecture style, including controller-based APIs, service-layer patterns, clean architecture, and minimal API approaches. The generator can support different project styles instead of forcing every solution into one shape.
+
+**Benefit:** Developers can match generated output to the architecture their team already uses, which makes adoption easier and keeps generated code aligned with existing engineering standards.
+
+![supported architecture options for controller service clean architecture and minimal API in sql2solution](assets/solution-configuration/supported-architecture-controller-service-clean-minimal-api-sql2solution.gif)
+
+</details>
+
+<details>
+<summary><strong>Include Or Exclude .NET Solution Project Layers</strong></summary>
+
+Decide which .NET project layers should be included in the generated solution. Teams can create leaner projects for simple tools or fuller layered solutions for production systems with API, application, domain, infrastructure, tests, and client needs.
+
+**Benefit:** The generated solution stays proportional to the project instead of adding unnecessary layers or leaving out structure the team needs later.
+
+![include or exclude .NET solution project layers in sql2solution](assets/solution-configuration/include-exclude-dotnet-solution-project-layers-sql2solution.gif)
+
+</details>
+
+<details>
+<summary><strong>API And DTO Styles: CQRS, MediatR, Controllers, Minimal APIs</strong></summary>
+
+Configure API style and DTO generation choices, including CQRS, MediatR, controllers, and minimal API patterns. This lets developers generate code that fits their preferred ASP.NET Core conventions and application complexity.
+
+**Benefit:** Teams can avoid hand-converting generated output to match their stack because the generator starts closer to the desired architecture.
+
+![API and DTO style options for CQRS MediatR controllers and minimal APIs in sql2solution](assets/solution-configuration/api-dto-styles-cqrs-mediatr-controllers-minimal-api-sql2solution.gif)
+
+</details>
+
+<details>
+<summary><strong>DTO Policy: Request, Response, Entity, Command, And Query DTOs</strong></summary>
+
+Define how sql2solution creates DTOs for API requests, responses, entities, commands, and queries. Clear DTO policy helps separate external API contracts from internal persistence and domain behavior.
+
+**Benefit:** Better DTO control improves maintainability, reduces accidental data exposure, and gives client applications cleaner contracts to consume.
+
+![DTO policy for request response entity command and query DTOs in sql2solution](assets/solution-configuration/dto-policy-request-response-entity-command-query-dtos-sql2solution.gif)
+
+</details>
+
+<details>
+<summary><strong>Entity Framework Core Configuration</strong></summary>
+
+Configure Entity Framework Core generation behavior for SQL-backed .NET projects. This helps shape how database metadata becomes C# persistence configuration, entity mapping, and data access conventions.
+
+**Benefit:** Consistent EF Core configuration reduces repetitive mapping work and makes generated infrastructure easier to review, test, and extend.
+
+![Entity Framework Core configuration for SQL Server to .NET API generation in sql2solution](assets/solution-configuration/entity-framework-core-configuration-sql2solution.gif)
+
+</details>
+
+<details>
+<summary><strong>Global Solution Endpoint Defaults</strong></summary>
+
+Set solution-wide endpoint defaults once and apply them consistently across generated APIs. Global defaults can cover repeated API behavior that should remain predictable across tables and entities.
+
+**Benefit:** Teams get consistent generated endpoints, fewer manual edits, and less risk that each entity behaves like a separate one-off implementation.
+
+![global solution endpoint defaults for ASP.NET Core API generation in sql2solution](assets/solution-configuration/global-solution-endpoint-defaults-aspnet-core-api-sql2solution.gif)
+
+</details>
+
+<details>
+<summary><strong>Advanced Endpoint Defaults</strong></summary>
+
+Fine-tune advanced endpoint behavior for generated ASP.NET Core APIs. These settings help teams control API behavior beyond the basic CRUD path, especially when projects need stronger conventions around generated operations.
+
+**Benefit:** Advanced defaults let developers make deeper API decisions before generation, saving manual endpoint cleanup after the solution is created.
+
+![advanced endpoint defaults for ASP.NET Core API generator in sql2solution](assets/solution-configuration/advanced-endpoint-defaults-aspnet-core-api-generator-sql2solution.gif)
+
+</details>
+
+<details>
+<summary><strong>Entity-Specific Endpoint Defaults</strong></summary>
+
+Override global endpoint defaults for a specific entity when one table needs different API behavior. This is useful when most endpoints should follow the same convention, but important entities need special handling.
+
+**Benefit:** Developers get the speed of global conventions while keeping the flexibility to model exceptions without hand-editing generated code later.
+
+![entity specific endpoint defaults overriding global settings in sql2solution](assets/solution-configuration/entity-specific-endpoint-defaults-override-global-settings-sql2solution.png)
+
+</details>
+
+<details>
+<summary><strong>Generate Different API Versions</strong></summary>
+
+Configure API versioning so generated ASP.NET Core endpoints can support versioned contracts. Versioning is important when clients depend on stable APIs while the database and product continue to evolve.
+
+**Benefit:** API version generation helps teams plan for backward compatibility, client migrations, and cleaner long-term API lifecycle management.
+
+![ASP.NET Core API versioning configuration in sql2solution](assets/solution-configuration/aspnet-core-api-versioning-sql2solution.png)
+
+</details>
+
 ## Why It Exists
 
 Building SQL-backed .NET applications often means repeating the same work:
