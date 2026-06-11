@@ -244,6 +244,100 @@ Configure API versioning so generated ASP.NET Core endpoints can support version
 
 </details>
 
+## 🚦 Product Workflow Walkthroughs
+
+These walkthroughs show the parts of sql2solution that help teams move beyond basic CRUD generation: client apps, security, runtime operations, realtime integrations, workflow automation, test generation, output management, and production-readiness checks.
+
+<details open>
+<summary><strong>🎨 Optional Client Generation: Razor Pages And Blazor Web App</strong></summary>
+
+Generate an optional client project alongside the backend API. sql2solution can create client-facing project structure for Razor Pages or Blazor-style web app workflows so the generated backend has a practical UI path from the beginning.
+
+**✅ Benefit:** Teams can validate generated APIs faster with real screens, reduce frontend setup time, and give stakeholders something useful to review earlier in the project.
+
+![sql2solution client generation for Razor Pages Blazor web app and ASP.NET Core API projects](assets/product-workflows/client-generation-razor-pages-blazor-web-app-aspnet-core-api-sql2solution.png)
+
+</details>
+
+<details>
+<summary><strong>🧬 Default Audit, Multi-Tenant, Pagination, Caching, And Query Behaviors</strong></summary>
+
+Configure default generation behavior for audit fields, tenant-aware data access, pagination, caching, and query rules. These defaults help shape how generated APIs behave across the solution before individual entities are customized.
+
+**✅ Benefit:** Teams can define consistent data access and API behavior once, then generate cleaner endpoints with fewer manual corrections after code creation.
+
+![default audit multi tenant pagination caching and query behavior configuration in sql2solution](assets/product-workflows/default-audit-multi-tenant-pagination-caching-query-behaviors-sql2solution.gif)
+
+![sql2solution default audit multi tenant pagination caching query behavior screenshot](assets/product-workflows/default-audit-multi-tenant-pagination-caching-query-behaviors-sql2solution.png)
+
+</details>
+
+<details>
+<summary><strong>🔐 Security: Authentication, Authorization, Roles, Policies, And RBAC</strong></summary>
+
+Enable authentication, choose providers, configure authorization modes, define roles and policies, and prepare enterprise-style access controls with RBAC bootstrap options for generated ASP.NET Core APIs.
+
+**✅ Benefit:** Security becomes part of the generated foundation instead of a late project add-on, helping teams build safer APIs with clearer access rules from the start.
+
+![ASP.NET Core API security authentication authorization roles policies and RBAC configuration in sql2solution](assets/product-workflows/security-authentication-authorization-roles-policies-rbac-aspnet-core-api-sql2solution.gif)
+
+</details>
+
+<details>
+<summary><strong>🛡️ Operations: Runtime Resilience, Observability, And Rate Limiting</strong></summary>
+
+Configure runtime operation features such as resilience patterns, observability, structured runtime readiness, and rate limiting. These settings help generated APIs behave more like production services instead of simple demo endpoints.
+
+**✅ Benefit:** Teams can prepare generated APIs for monitoring, reliability, and controlled traffic earlier in the development lifecycle.
+
+![sql2solution operations runtime resilience observability and rate limiting for ASP.NET Core APIs](assets/product-workflows/operations-runtime-resilience-observability-rate-limiting-sql2solution.gif)
+
+</details>
+
+<details>
+<summary><strong>⚡ SignalR Realtime Integration For Client UI Refresh</strong></summary>
+
+Enable SignalR integration so generated client screens can respond to backend data changes without requiring users to refresh the page. This creates a stronger foundation for realtime dashboards, admin tools, and collaborative business workflows.
+
+**✅ Benefit:** Generated apps can feel more responsive and modern, while developers get a starting point for richer realtime features.
+
+![SignalR realtime integration for Blazor client UI refresh in sql2solution](assets/product-workflows/signalr-realtime-integration-blazor-client-ui-refresh-sql2solution.gif)
+
+</details>
+
+<details>
+<summary><strong>🔄 Workflow And State Machine Generation</strong></summary>
+
+Configure workflow and state machine behavior for generated entities. This helps teams model lifecycle transitions, status-driven actions, and structured business processes directly in the generated solution plan.
+
+**✅ Benefit:** Developers can generate more than simple CRUD endpoints by adding business-state behavior that mirrors real operational workflows.
+
+![workflow and state machine generation for ASP.NET Core APIs in sql2solution](assets/product-workflows/workflow-state-machine-generated-aspnet-core-api-sql2solution.gif)
+
+</details>
+
+<details>
+<summary><strong>🧪 Test Section And Smoke Tests</strong></summary>
+
+Include tests in the generated solution and let sql2solution prepare smoke-test workflows after the solution is created. This helps verify that generated APIs, configuration, and expected runtime behavior are still aligned.
+
+**✅ Benefit:** Teams can catch broken generation assumptions earlier and ship with more confidence because validation is part of the generated project workflow.
+
+![test section and smoke tests for generated .NET API solution in sql2solution](assets/product-workflows/test-section-smoke-tests-generated-dotnet-api-solution-sql2solution.gif)
+
+</details>
+
+<details>
+<summary><strong>📤 Output Management: CI Pipeline, Postman, EF Core Migrations, API Validation, And Smoke Tests</strong></summary>
+
+Manage generated solution outputs before or after creation, including CI pipeline assets, Postman collections, EF Core migration management, API validation, and smoke-test execution.
+
+**✅ Benefit:** sql2solution helps teams move from code generation to project delivery by preparing the supporting artifacts needed for testing, integration, automation, and handoff.
+
+![sql2solution output section for CI pipeline Postman collection EF Core migrations API validation and smoke tests](assets/product-workflows/output-section-ci-pipeline-postman-ef-core-migrations-api-validation-smoke-tests-sql2solution.gif)
+
+</details>
+
 ## 💡 Why It Exists
 
 Building SQL-backed .NET applications often means repeating the same work:
