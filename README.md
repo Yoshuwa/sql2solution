@@ -8,10 +8,13 @@
 [![.NET](https://img.shields.io/badge/.NET-8%20%7C%209%20%7C%2010-512BD4?style=for-the-badge&logo=dotnet)](https://sql2solution.com/)
 [![ASP.NET Core](https://img.shields.io/badge/ASP.NET%20Core-API%20Generator-2563eb?style=for-the-badge)](https://sql2solution.com/)
 [![SQL Server](https://img.shields.io/badge/SQL%20Server-to%20API-cc2927?style=for-the-badge)](https://sql2solution.com/)
+[![Request Free License](https://img.shields.io/badge/Request%20Free%20License-sql2solution-16a34a?style=for-the-badge)](https://sql2solution.com/#license-form)
 
 **sql2solution** helps developers turn SQL database structure into clean, repeatable, production-minded .NET solutions with APIs, client UI, Swagger documentation, security options, and validation workflows.
 
 Visit the official website: **[https://sql2solution.com/](https://sql2solution.com/)**
+
+### 👉 [Request a free sql2solution license](https://sql2solution.com/#license-form)
 
 </div>
 
@@ -136,6 +139,10 @@ The repository now includes generated sample output so developers can inspect wh
 | [AdventureWorksLT2017Api](samples/AdventureWorksLT2017Api) | Generated ASP.NET Core API solution with API, Application, Domain, Infrastructure, Razor Pages client, Blazor client, Docker files, docs, scripts, and tests. |
 
 The sample excludes local build/editor artifacts such as `bin`, `obj`, and `.vs`, keeping the repository focused on generated source code and project structure.
+
+> 🚀 **Ready to try it on your own SQL-backed .NET project?**
+>
+> [Request a free sql2solution license](https://sql2solution.com/#license-form) and generate an ASP.NET Core API, Swagger docs, client UI, tests, and project structure from your database.
 
 ## 🛠️ Solution Configuration
 
@@ -484,6 +491,10 @@ Use smoke-test coverage points and back-to-back checks to confirm API startup, S
 The public website and product details live at:
 
 **[https://sql2solution.com/](https://sql2solution.com/)**
+
+Request a free license here:
+
+**[https://sql2solution.com/#license-form](https://sql2solution.com/#license-form)**
 
 This GitHub repository is a public discovery page for the product. It intentionally does not expose the private website source code or production assets.
 
