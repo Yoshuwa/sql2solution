@@ -1,0 +1,315 @@
+﻿@page "/resource/{key}"
+@model ResourceModel
+@{
+    ViewData["Title"] = Model.Resource?.DisplayName ?? "Resource";
+}
+
+@if (Model.Resource is null)
+{
+    <section class="panel"><p>Resource was not found.</p></section>
+}
+else if (!Model.CanRead)
+{
+    <section class="panel"><p>@Model.ErrorMessage</p></section>
+}
+else
+{
+    <section class="panel">
+        <div class="resource-header">
+            <div>
+                <h1>@Model.Resource.DisplayName</h1>
+                <p>@Model.Resource.Route</p>
+                @if (!string.IsNullOrWhiteSpace(Model.EndpointPerformance))
+                {
+                    <span class="perf-pill">@Model.EndpointPerformance</span>
+                }
+            </div>
+            <form method="post" asp-page-handler="Load" asp-route-key="@Model.Resource.Key">
+                <input type="hidden" name="CurrentPage" value="@Model.CurrentPage" />
+                <input type="hidden" name="pageSize" value="@Model.PageSize" />
+                <input type="hidden" name="SearchText" value="@Model.SearchText" />
+                <input type="hidden" name="FilterField" value="@Model.FilterField" />
+                <input type="hidden" name="FilterValue" value="@Model.FilterValue" />
+                <input type="hidden" name="SortBy" value="@Model.SortBy" />
+                <input type="hidden" name="SortDirection" value="@Model.SortDirection" />
+                <button type="submit"><i class="fa-solid fa-rotate"></i><span>Load</span></button>
+            </form>
+        </div>
+        <form method="post" asp-page-handler="Load" asp-route-key="@Model.Resource.Key" class="query-toolbar">
+            <label>
+                <span>Search</span>
+                <input asp-for="SearchText" placeholder="Search text fields..." />
+            </label>
+            <label>
+                <span>Filter field</span>
+                <select asp-for="FilterField">
+                    <option value="">Any field</option>
+                    @foreach (var field in Model.DisplayFields)
+                    {
+                        <option value="@field.Name">@field.Name</option>
+                    }
+                </select>
+            </label>
+            <label>
+                <span>Filter value</span>
+                <input asp-for="FilterValue" placeholder="Exact value or text..." />
+            </label>
+            <label>
+                <span>Sort</span>
+                <select asp-for="SortBy">
+                    @foreach (var field in Model.DisplayFields)
+                    {
+                        <option value="@field.Name">@field.Name</option>
+                    }
+                </select>
+            </label>
+            <label>
+                <span>Direction</span>
+                <select asp-for="SortDirection">
+                    <option value="asc">Ascending</option>
+                    <option value="desc">Descending</option>
+                </select>
+            </label>
+            <input type="hidden" name="CurrentPage" value="1" />
+            <input type="hidden" name="PageSize" value="@Model.PageSize" />
+            <button type="submit" class="button-secondary"><i class="fa-solid fa-filter"></i><span>Apply</span></button>
+            <button type="submit" class="button-secondary" name="clearQuery" value="true"><i class="fa-solid fa-xmark"></i><span>Clear</span></button>
+        </form>
+        <div class="resource-toolbar">
+            <span>@Model.Rows.Count row(s) on page @Model.CurrentPage of @Model.TotalPages (@Model.TotalCount total)</span>
+            <form method="post" asp-page-handler="Load" asp-route-key="@Model.Resource.Key" class="pager">
+                <button type="submit" class="button-secondary compact-button" name="CurrentPage" value="@(Model.CurrentPage - 1)" disabled="@(Model.CurrentPage <= 1)">Previous</button>
+                <input type="hidden" name="pageSize" value="@Model.PageSize" />
+                <input type="hidden" name="SearchText" value="@Model.SearchText" />
+                <input type="hidden" name="FilterField" value="@Model.FilterField" />
+                <input type="hidden" name="FilterValue" value="@Model.FilterValue" />
+                <input type="hidden" name="SortBy" value="@Model.SortBy" />
+                <input type="hidden" name="SortDirection" value="@Model.SortDirection" />
+            </form>
+            <form method="post" asp-page-handler="Load" asp-route-key="@Model.Resource.Key" class="pager">
+                <label>
+                    <span>Rows</span>
+                    <select name="pageSize" onchange="this.form.submit()">
+                        <option value="10" selected="@(Model.PageSize == 10)">10</option>
+                        <option value="25" selected="@(Model.PageSize == 25)">25</option>
+                        <option value="50" selected="@(Model.PageSize == 50)">50</option>
+                        <option value="100" selected="@(Model.PageSize == 100)">100</option>
+                        <option value="200" selected="@(Model.PageSize == 200)">200</option>
+                    </select>
+                </label>
+                <input type="hidden" name="CurrentPage" value="1" />
+                <input type="hidden" name="SearchText" value="@Model.SearchText" />
+                <input type="hidden" name="FilterField" value="@Model.FilterField" />
+                <input type="hidden" name="FilterValue" value="@Model.FilterValue" />
+                <input type="hidden" name="SortBy" value="@Model.SortBy" />
+                <input type="hidden" name="SortDirection" value="@Model.SortDirection" />
+            </form>
+            <form method="post" asp-page-handler="Load" asp-route-key="@Model.Resource.Key" class="pager">
+                <input type="hidden" name="pageSize" value="@Model.PageSize" />
+                <input type="hidden" name="SearchText" value="@Model.SearchText" />
+                <input type="hidden" name="FilterField" value="@Model.FilterField" />
+                <input type="hidden" name="FilterValue" value="@Model.FilterValue" />
+                <input type="hidden" name="SortBy" value="@Model.SortBy" />
+                <input type="hidden" name="SortDirection" value="@Model.SortDirection" />
+                <button type="submit" class="button-secondary compact-button" name="CurrentPage" value="@(Model.CurrentPage + 1)" disabled="@(Model.CurrentPage >= Model.TotalPages)">Next</button>
+            </form>
+        </div>
+        @if (Model.Resource.SupportsBulkActions && (Model.CanRead || Model.CanUpdate || Model.CanDelete))
+        {
+            <form id="bulkForm" method="post" asp-page-handler="Bulk" asp-route-key="@Model.Resource.Key" class="bulk-toolbar">
+                <input type="hidden" name="CurrentPage" value="@Model.CurrentPage" />
+                <input type="hidden" name="pageSize" value="@Model.PageSize" />
+                <input type="hidden" name="SearchText" value="@Model.SearchText" />
+                <input type="hidden" name="FilterField" value="@Model.FilterField" />
+                <input type="hidden" name="FilterValue" value="@Model.FilterValue" />
+                <input type="hidden" name="SortBy" value="@Model.SortBy" />
+                <input type="hidden" name="SortDirection" value="@Model.SortDirection" />
+                <span>Selected rows</span>
+                @if (Model.CanUpdate)
+                {
+                    <label>
+                        <span>Update field</span>
+                        <select asp-for="BulkField">
+                            <option value="">Choose field</option>
+                            @foreach (var field in Model.BulkEditableFields)
+                            {
+                                <option value="@field.Name">@field.Name</option>
+                            }
+                        </select>
+                    </label>
+                    <label>
+                        <span>Value</span>
+                        <input asp-for="BulkValue" placeholder="New value..." />
+                    </label>
+                }
+                @if (Model.CanRead)
+                {
+                    <button type="submit" class="button-secondary compact-button" name="bulkAction" value="export"><i class="fa-solid fa-file-export"></i><span>Export selected</span></button>
+                }
+                @if (Model.CanUpdate)
+                {
+                    <button type="submit" class="button-secondary compact-button" name="bulkAction" value="update" data-confirm-message="@($"Update selected {Model.Resource.DisplayName} row(s)?")" onclick="return confirm(this.dataset.confirmMessage);"><i class="fa-solid fa-pen-to-square"></i><span>Update selected</span></button>
+                }
+                @if (Model.CanDelete)
+                {
+                    <button type="submit" class="button-danger compact-button" name="bulkAction" value="delete" data-confirm-message="@($"{Model.Resource.DeleteLabel} selected {Model.Resource.DisplayName} row(s)?")" onclick="return confirm(this.dataset.confirmMessage);"><i class="fa-solid fa-trash"></i><span>@Model.Resource.DeleteLabel selected</span></button>
+                }
+            </form>
+        }
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        @if (Model.Resource.SupportsBulkActions && (Model.CanRead || Model.CanUpdate || Model.CanDelete))
+                        {
+                            <th>Select</th>
+                        }
+                        @foreach (var field in Model.DisplayFields.Take(8))
+                        {
+                            <th>@field.Name</th>
+                        }
+                        <th>Command</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Rows.Count == 0)
+                    {
+                        <tr><td colspan="9">No rows loaded.</td></tr>
+                    }
+                    @foreach (var row in Model.Rows)
+                    {
+                        <tr>
+                            @if (Model.Resource.SupportsBulkActions && (Model.CanRead || Model.CanUpdate || Model.CanDelete))
+                            {
+                                <td>
+                                    <input type="checkbox" name="selectedIds" value="@Model.Value(row, Model.Resource.PrimaryKey)" form="bulkForm" />
+                                </td>
+                            }
+                            @foreach (var field in Model.DisplayFields.Take(8))
+                            {
+                                <td>@Model.Value(row, field.Name)</td>
+                            }
+                            <td>
+                                <div class="command-stack">
+                                    @if (Model.CanRead)
+                                    {
+                                        <form method="post" asp-page-handler="History" asp-route-key="@Model.Resource.Key">
+                                            <input type="hidden" name="id" value="@Model.Value(row, Model.Resource.PrimaryKey)" />
+                                            <button type="submit" class="button-secondary compact-button"><i class="fa-solid fa-clock-rotate-left"></i><span>History</span></button>
+                                        </form>
+                                    }
+                                    @if (Model.CanDelete)
+                                    {
+                                        <form method="post" asp-page-handler="Delete" asp-route-key="@Model.Resource.Key" data-confirm-message="@($"{Model.Resource.DeleteLabel} {Model.Resource.DisplayName} record {Model.Value(row, Model.Resource.PrimaryKey)}?")" onsubmit="return confirm(this.dataset.confirmMessage);">
+                                            <input type="hidden" name="id" value="@Model.Value(row, Model.Resource.PrimaryKey)" />
+                                            <input type="hidden" name="CurrentPage" value="@Model.CurrentPage" />
+                                            <input type="hidden" name="pageSize" value="@Model.PageSize" />
+                                            <button type="submit" class="button-danger compact-button"><i class="fa-solid fa-trash"></i><span>@Model.Resource.DeleteLabel</span></button>
+                                        </form>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <form class="inline-form" method="post" asp-page-handler="GetById" asp-route-key="@Model.Resource.Key">
+            <input name="id" placeholder="@Model.Resource.PrimaryKey" />
+            <button type="submit"><i class="fa-solid fa-magnifying-glass"></i><span>Get by id</span></button>
+            @if (Model.CanDelete)
+            {
+                <button type="submit" class="button-danger" formaction="?handler=Delete" data-confirm-message="@($"{Model.Resource.DeleteLabel} {Model.Resource.DisplayName} record?")" onclick="return confirm(this.dataset.confirmMessage);"><i class="fa-solid fa-trash"></i><span>@Model.Resource.DeleteLabel</span></button>
+            }
+        </form>
+    </section>
+
+    <div class="form-grid">
+        @if (Model.CanWrite)
+        {
+            <section class="panel">
+                <div class="section-title">
+                    <h2><i class="fa-solid fa-plus"></i><span>Create</span></h2>
+                </div>
+                <form method="post" asp-page-handler="Create" asp-route-key="@Model.Resource.Key" class="fields">
+                    @foreach (var field in Model.EditFields)
+                    {
+                        @await Html.PartialAsync("_ApiFieldInput", new FieldInputModel(field, Model.LookupOptionsFor(field.Name), "values"))
+                    }
+                    <button type="submit"><i class="fa-solid fa-floppy-disk"></i><span>Create</span></button>
+                </form>
+            </section>
+        }
+
+        @if (Model.CanUpdate)
+        {
+            <section class="panel">
+                <div class="section-title">
+                    <h2><i class="fa-solid fa-pen-to-square"></i><span>Update</span></h2>
+                </div>
+                <form method="post" asp-page-handler="Update" asp-route-key="@Model.Resource.Key" class="fields" data-confirm-message="@($"Update {Model.Resource.DisplayName} record?")" onsubmit="return confirm(this.dataset.confirmMessage);">
+                    <label>
+                        <span>@Model.Resource.PrimaryKey</span>
+                        <input name="id" />
+                    </label>
+                    @foreach (var field in Model.EditFields)
+                    {
+                        @await Html.PartialAsync("_ApiFieldInput", new FieldInputModel(field, Model.LookupOptionsFor(field.Name), "values"))
+                    }
+                    <button type="submit"><i class="fa-solid fa-check"></i><span>Update</span></button>
+                </form>
+            </section>
+        }
+    </div>
+
+    <section class="panel">
+        <h2>Response</h2>
+        @if (Model.HasError)
+        {
+            <div class="alert">
+                <strong><i class="fa-solid fa-triangle-exclamation"></i><span>@Model.ErrorMessage</span></strong>
+                <details>
+                    <summary>View logs</summary>
+                    <pre>@Model.ResponseBody</pre>
+                </details>
+            </div>
+        }
+        else
+        {
+            <p class="status">HTTP @Model.LastStatusCode</p>
+            <pre>@Model.ResponseBody</pre>
+        }
+    </section>
+
+    @if (Model.HistoryRows.Count > 0)
+    {
+        <section class="panel">
+            <h2>Activity</h2>
+            <div class="table-wrap">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>When</th>
+                            <th>Action</th>
+                            <th>User</th>
+                            <th>Summary</th>
+                            <th>Changes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var history in Model.HistoryRows)
+                        {
+                            <tr>
+                                <td>@Model.Value(history, "occurredAtUtc")</td>
+                                <td>@Model.Value(history, "action")</td>
+                                <td>@(Model.Value(history, "userName") is { Length: > 0 } user ? user : Model.Value(history, "userId"))</td>
+                                <td>@Model.Value(history, "summary")</td>
+                                <td>@Model.FormatChanges(Model.Value(history, "changesJson"))</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    }
+}

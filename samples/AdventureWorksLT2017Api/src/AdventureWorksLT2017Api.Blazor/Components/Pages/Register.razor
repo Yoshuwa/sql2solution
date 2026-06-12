@@ -1,0 +1,40 @@
+﻿@page "/register"
+@inject ApiSession Session
+
+<section class="panel auth-panel">
+    <h1>Register user</h1>
+    <EditForm Model="this" OnValidSubmit="RegisterAsync">
+        <div class="fields">
+            <label><span>User name</span><input @bind="UserName" /></label>
+            <label><span>Password</span><input type="password" @bind="Password" /></label>
+            <label><span>Tenant id</span><input @bind="TenantId" /></label>
+            <label><span>Role</span><input @bind="Role" /></label>
+            <button type="submit" disabled="@IsBusy">Register</button>
+        </div>
+    </EditForm>
+    @if (!string.IsNullOrWhiteSpace(StatusMessage))
+    {
+        <p class="status">@StatusMessage</p>
+    }
+    <pre>@ResponseBody</pre>
+</section>
+
+@code {
+    private string UserName { get; set; } = "";
+    private string Password { get; set; } = "";
+    private string TenantId { get; set; } = "";
+    private string Role { get; set; } = "User";
+    private string StatusMessage { get; set; } = "";
+    private string ResponseBody { get; set; } = "";
+    private bool IsBusy { get; set; }
+
+    private async Task RegisterAsync()
+    {
+        IsBusy = true;
+        var tenantId = string.IsNullOrWhiteSpace(TenantId) ? null : TenantId;
+        var result = await Session.SendAsync(HttpMethod.Post, "api/auth/users", new { userName = UserName, password = Password, tenantId, role = Role });
+        ResponseBody = result.Body;
+        StatusMessage = result.Success ? "User registered." : result.UserMessage;
+        IsBusy = false;
+    }
+}

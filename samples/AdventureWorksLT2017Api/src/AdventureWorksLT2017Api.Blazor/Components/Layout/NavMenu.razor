@@ -1,0 +1,51 @@
+﻿@inject ApiSession Session
+@implements IDisposable
+
+<aside class="sidebar">
+    <a class="brand" href="">
+        <span class="brand-mark"><i class="fa-solid fa-code"></i></span>
+        <span>AdventureWorksLT2017Api.Blazor</span>
+    </a>
+    <nav>
+        <NavLink href="" Match="NavLinkMatch.All"><i class="fa-solid fa-gauge-high"></i><span>Dashboard</span></NavLink>
+        @if (!ApiCatalog.RequireAuthenticationForMenus || Session.IsAuthenticated)
+        {
+            @if (ApiCatalog.HasWorkflowResources)
+            {
+                <NavLink href="workflow"><i class="fa-solid fa-diagram-project"></i><span>Workflow</span></NavLink>
+            }
+            @foreach (var resource in ApiCatalog.Resources.Where(Session.CanRead))
+            {
+                <NavLink href="@($"resources/{resource.Key}")"><i class="fa-solid fa-table"></i><span>@resource.DisplayName</span></NavLink>
+            }
+        }
+        @if (ApiCatalog.IncludeSecurityPages)
+        {
+            <span class="nav-section"><i class="fa-solid fa-shield-halved"></i><span>Security</span></span>
+            <NavLink href="login"><i class="fa-solid fa-right-to-bracket"></i><span>Login</span></NavLink>
+            @if (Session.CanManageUsers)
+            {
+                <NavLink href="users"><i class="fa-solid fa-users-gear"></i><span>Users &amp; roles</span></NavLink>
+                <NavLink href="register"><i class="fa-solid fa-user-plus"></i><span>Register user</span></NavLink>
+            }
+            @if (Session.CanManageTenants)
+            {
+                <NavLink href="tenants"><i class="fa-solid fa-building-lock"></i><span>Tenants</span></NavLink>
+            }
+        }
+    </nav>
+</aside>
+
+@code {
+    protected override void OnInitialized()
+    {
+        Session.StateChanged += OnSessionChanged;
+    }
+
+    private void OnSessionChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose()
+    {
+        Session.StateChanged -= OnSessionChanged;
+    }
+}

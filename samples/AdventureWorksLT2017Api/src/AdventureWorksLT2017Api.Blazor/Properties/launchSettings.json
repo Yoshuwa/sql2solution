@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "AdventureWorksLT2017Api.Blazor": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:58295;http://localhost:58297"
+    }
+  }
+}

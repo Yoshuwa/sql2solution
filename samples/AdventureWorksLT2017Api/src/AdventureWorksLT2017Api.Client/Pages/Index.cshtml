@@ -1,0 +1,19 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<section class="panel">
+    <h1>Generated API Client</h1>
+    <p>This client is generated from the API metadata and uses the same resource catalog as the menu.</p>
+    <div class="grid">
+        @foreach (var resource in Model.Resources)
+        {
+            <a class="tile" asp-page="/Resource" asp-route-key="@resource.Key">
+                <strong>@resource.DisplayName</strong>
+                <span>@resource.Route</span>
+            </a>
+        }
+    </div>
+</section>

@@ -1,0 +1,119 @@
+﻿@using AdventureWorksLT2017Api.Client.Models
+@inject AdventureWorksLT2017Api.Client.Services.ApiSession Session
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] - API Client</title>
+    <script>
+        (() => {
+            const storedTheme = localStorage.getItem("apiClient.theme");
+            const theme = storedTheme || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+            document.documentElement.dataset.theme = theme;
+        })();
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="@(ApiCatalog.IsTopNavigation ? "top-nav" : "")">
+    <aside class="sidebar">
+        <a class="brand" asp-page="/Index"><i class="fa-solid fa-layer-group"></i><span>AdventureWorksLT2017Api.Client</span></a>
+        <nav>
+            <a asp-page="/Index"><i class="fa-solid fa-gauge-high"></i><span>Dashboard</span></a>
+            @if (!ApiCatalog.RequireAuthenticationForMenus || Session.IsAuthenticated)
+            {
+                @foreach (var resource in ApiCatalog.Resources.Where(Session.CanRead))
+                {
+                    <a asp-page="/Resource" asp-route-key="@resource.Key"><i class="fa-solid fa-table"></i><span>@resource.DisplayName</span></a>
+                }
+            }
+            @if (ApiCatalog.IncludeSecurityPages)
+            {
+                <span class="nav-section">Security</span>
+                <a asp-page="/Login"><i class="fa-solid fa-right-to-bracket"></i><span>Login</span></a>
+                @if (Session.CanManageUsers)
+                {
+                    <a asp-page="/UserManagement"><i class="fa-solid fa-users-gear"></i><span>Users & roles</span></a>
+                    <a asp-page="/Register"><i class="fa-solid fa-user-plus"></i><span>Register user</span></a>
+                }
+                @if (Session.CanManageTenants)
+                {
+                    <a asp-page="/Tenants"><i class="fa-solid fa-building-lock"></i><span>Tenants</span></a>
+                }
+            }
+        </nav>
+    </aside>
+    <main class="shell">
+        <header class="topbar">
+            <div>
+                <strong>@ViewData["Title"]</strong>
+                <span>API base URL comes from appsettings.json</span>
+            </div>
+    <div class="session">
+        <button type="button" class="button-icon theme-toggle" onclick="toggleTheme()" title="Toggle light or dark mode" aria-label="Toggle light or dark mode">
+            <i class="fa-solid fa-circle-half-stroke"></i>
+        </button>
+        @if (Session.IsAuthenticated)
+        {
+                    <details class="account-menu">
+                        <summary class="account-trigger">
+                            <span class="user-name"><i class="fa-solid fa-user-shield"></i><span>@Session.UserName</span></span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </summary>
+                        <div class="account-dropdown">
+                            <div class="account-summary">
+                                <span class="account-avatar"><i class="fa-solid fa-user-shield"></i></span>
+                                <div>
+                                    <strong>@Session.UserName</strong>
+                                    <span>Authenticated API session</span>
+                                </div>
+                            </div>
+                            @if (!string.IsNullOrWhiteSpace(Session.TenantId))
+                            {
+                                <div class="account-detail"><i class="fa-solid fa-building-user"></i><span>Tenant</span><strong title="@Session.TenantId">@Session.TenantId</strong><button type="button" class="button-icon copy-button" title="Copy tenant id" aria-label="Copy tenant id" data-copy="@Session.TenantId" onclick="copyToClipboard(this.dataset.copy)"><i class="fa-regular fa-copy"></i></button></div>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(Session.UserId))
+                            {
+                                <div class="account-detail"><i class="fa-solid fa-id-badge"></i><span>User</span><strong title="@Session.UserId">@Session.UserId</strong><button type="button" class="button-icon copy-button" title="Copy user id" aria-label="Copy user id" data-copy="@Session.UserId" onclick="copyToClipboard(this.dataset.copy)"><i class="fa-regular fa-copy"></i></button></div>
+                            }
+                            <form method="post" asp-page="/Login" asp-page-handler="Logout">
+                                <button type="submit" class="account-logout"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Logout</span></button>
+                            </form>
+                        </div>
+                    </details>
+                }
+                else if (ApiCatalog.HasAuthentication)
+                {
+                    <a class="button" asp-page="/Login"><i class="fa-solid fa-right-to-bracket"></i><span>Sign in</span></a>
+                }
+            </div>
+        </header>
+        @RenderBody()
+    </main>
+    <script>
+        function toggleTheme() {
+            const currentTheme = document.documentElement.dataset.theme === "dark" ? "dark" : "light";
+            const nextTheme = currentTheme === "dark" ? "light" : "dark";
+            document.documentElement.dataset.theme = nextTheme;
+            localStorage.setItem("apiClient.theme", nextTheme);
+        }
+        async function copyToClipboard(value) {
+            if (!value) return;
+            if (navigator.clipboard && window.isSecureContext) {
+                await navigator.clipboard.writeText(value);
+                return;
+            }
+            const input = document.createElement("textarea");
+            input.value = value;
+            input.style.position = "fixed";
+            input.style.opacity = "0";
+            document.body.appendChild(input);
+            input.focus();
+            input.select();
+            document.execCommand("copy");
+            input.remove();
+        }
+    </script>
+</body>
+</html>

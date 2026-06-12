@@ -1,0 +1,35 @@
+﻿@model FieldInputModel
+@{
+    var field = Model.Field;
+    var fieldName = $"{Model.Prefix}[{field.Name}]";
+}
+
+<label class="field @(field.InputKind == "checkbox" ? "field-check" : "")">
+    <span>@field.Name</span>
+    @if (field.HasLookup || Model.LookupOptions.Count > 0)
+    {
+        <select name="@fieldName">
+            <option value="">Choose @field.Name</option>
+            @foreach (var option in Model.LookupOptions)
+            {
+                <option value="@option.Value">@option.Label</option>
+            }
+        </select>
+    }
+    else if (field.InputKind == "checkbox")
+    {
+        <input type="hidden" name="@fieldName" value="false" />
+        <span class="toggle-line">
+            <input type="checkbox" name="@fieldName" value="true" />
+            <span>Enabled</span>
+        </span>
+    }
+    else
+    {
+        <input type="@field.InputKind" name="@fieldName" placeholder="@field.ClrType" />
+    }
+    @if (field.HasLookup)
+    {
+        <small>Loaded from @field.LookupResourceKey.</small>
+    }
+</label>

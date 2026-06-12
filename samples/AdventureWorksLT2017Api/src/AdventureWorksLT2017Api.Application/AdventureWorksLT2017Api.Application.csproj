@@ -1,0 +1,5 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\AdventureWorksLT2017Api.Domain\AdventureWorksLT2017Api.Domain.csproj" />
+  </ItemGroup>
+</Project>

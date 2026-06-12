@@ -1,0 +1,29 @@
+﻿@page
+@model LoginModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<section class="panel narrow">
+    <h1>Login</h1>
+    <form method="post" class="fields">
+        <label><span>User name</span><input asp-for="UserName" /></label>
+        <label><span>Password</span><input asp-for="Password" type="password" /></label>
+        <button type="submit">Login</button>
+    </form>
+    <p class="status">@Model.Message</p>
+    @if (Model.HasError)
+    {
+        <div class="alert">
+            <strong>@Model.ErrorMessage</strong>
+            <details>
+                <summary>View logs</summary>
+                <pre>@Model.ResponseBody</pre>
+            </details>
+        </div>
+    }
+    else
+    {
+        <pre>@Model.ResponseBody</pre>
+    }
+</section>

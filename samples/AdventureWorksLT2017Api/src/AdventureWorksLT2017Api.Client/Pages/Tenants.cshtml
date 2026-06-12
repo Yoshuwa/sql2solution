@@ -1,0 +1,43 @@
+﻿@page
+@model TenantsModel
+@{
+    ViewData["Title"] = "Tenants";
+}
+
+<section class="panel">
+    <div class="resource-header">
+        <div>
+            <h1>Tenants</h1>
+            <p>Manage tenant records through the generated auth API.</p>
+        </div>
+        <form method="post" asp-page-handler="Load"><button type="submit">Load</button></form>
+    </div>
+    <form method="post" asp-page-handler="Create" class="inline-form">
+        <input asp-for="TenantName" placeholder="Tenant name" />
+        <button type="submit">Create tenant</button>
+    </form>
+    <form method="post" asp-page-handler="Enable" class="inline-form">
+        <input name="tenantId" placeholder="Tenant id" />
+        <button type="submit">Enable</button>
+        <button type="submit" formaction="?handler=Disable">Disable</button>
+    </form>
+</section>
+
+<section class="panel">
+    <h2>Response</h2>
+    @if (Model.HasError)
+    {
+        <div class="alert">
+            <strong>@Model.ErrorMessage</strong>
+            <details>
+                <summary>View logs</summary>
+                <pre>@Model.ResponseBody</pre>
+            </details>
+        </div>
+    }
+    else
+    {
+        <p class="status">HTTP @Model.LastStatusCode</p>
+        <pre>@Model.ResponseBody</pre>
+    }
+</section>

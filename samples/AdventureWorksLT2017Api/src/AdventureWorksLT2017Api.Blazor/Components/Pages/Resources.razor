@@ -1,0 +1,1005 @@
+﻿@page "/resources"
+@page "/resources/{ResourceKey}"
+@inject ApiSession Session
+@inject NavigationManager Navigation
+@inject Microsoft.JSInterop.IJSRuntime Js
+
+
+@implements IDisposable
+
+<section class="panel">
+    <div class="panel-heading">
+        <div>
+            <h1>@(Resource?.DisplayName ?? "Resources")</h1>
+            <p>@(Resource?.Route ?? "Choose a resource from the generated API catalog.")</p>
+        </div>
+        <button type="button" @onclick="LoadAsync" disabled="@(Resource is null || IsRestoringSession || !Session.IsReady || !CanRead || IsBusy)">Refresh</button>
+    </div>
+
+    @if (Resource is null)
+    {
+        <p>No API resources are available in this client template.</p>
+    }
+    else if (IsRestoringSession || !Session.IsReady)
+    {
+        <div class="loader-line">
+            <span class="spinner" aria-hidden="true"></span>
+            <span>Loading...</span>
+        </div>
+    }
+    else if (!CanRead)
+    {
+        <p>@ReadDeniedMessage</p>
+    }
+    else
+    {
+        <div class="resource-toolbar">
+            <select @bind="SelectedResourceKey" @bind:after="ChangeResource">
+                @foreach (var resource in ReadableResources)
+                {
+                    <option value="@resource.Key">@resource.DisplayName</option>
+                }
+            </select>
+            <span>@Rows.Count row(s) on page @Page of @TotalPages (@TotalCount total)</span>
+            @if (!string.IsNullOrWhiteSpace(EndpointPerformance))
+            {
+                <span class="perf-pill">@EndpointPerformance</span>
+            }
+            
+        </div>
+        <div class="query-toolbar">
+            <label>
+                <span>Search</span>
+                <input @bind="SearchText" placeholder="Search text fields..." />
+            </label>
+            <label>
+                <span>Filter field</span>
+                <select @bind="FilterField">
+                    <option value="">Any field</option>
+                    @foreach (var field in DisplayFields)
+                    {
+                        <option value="@field.Name">@field.Name</option>
+                    }
+                </select>
+            </label>
+            <label>
+                <span>Filter value</span>
+                <input @bind="FilterValue" placeholder="Exact value or text..." />
+            </label>
+            <label>
+                <span>Sort</span>
+                <select @bind="SortBy">
+                    @foreach (var field in DisplayFields)
+                    {
+                        <option value="@field.Name">@field.Name</option>
+                    }
+                </select>
+            </label>
+            <label>
+                <span>Direction</span>
+                <select @bind="SortDirection">
+                    <option value="asc">Ascending</option>
+                    <option value="desc">Descending</option>
+                </select>
+            </label>
+            <button type="button" class="button-secondary" @onclick="ApplyQueryAsync" disabled="@IsBusy">Apply</button>
+            <button type="button" class="button-secondary" @onclick="ClearQueryAsync" disabled="@IsBusy">Clear</button>
+        </div>
+        @if (Resource.SupportsBulkActions && (CanRead || CanUpdate || CanDelete))
+        {
+            <div class="bulk-toolbar">
+                <span>@SelectedIds.Count selected</span>
+                <button type="button" class="button-secondary compact-button" @onclick="SelectPageRows" disabled="@(IsBusy || Rows.Count == 0)">Select page</button>
+                <button type="button" class="button-secondary compact-button" @onclick="ClearSelectedRows" disabled="@(IsBusy || SelectedIds.Count == 0)">Clear</button>
+                @if (CanUpdate)
+                {
+                    <label>
+                        <span>Update field</span>
+                        <select @bind="BulkField">
+                            <option value="">Choose field</option>
+                            @foreach (var field in BulkEditableFields)
+                            {
+                                <option value="@field.Name">@field.Name</option>
+                            }
+                        </select>
+                    </label>
+                    <label>
+                        <span>Value</span>
+                        <input @bind="BulkValue" placeholder="New value..." />
+                    </label>
+                }
+                @if (CanRead)
+                {
+                    <button type="button" class="button-secondary compact-button" @onclick="BulkExportAsync" disabled="@(IsBusy || SelectedIds.Count == 0)"><i class="fa-solid fa-file-export"></i><span>Export selected</span></button>
+                }
+                @if (CanUpdate)
+                {
+                    <button type="button" class="button-secondary compact-button" @onclick="BulkUpdateAsync" disabled="@(IsBusy || SelectedIds.Count == 0 || string.IsNullOrWhiteSpace(BulkField))"><i class="fa-solid fa-pen-to-square"></i><span>Update selected</span></button>
+                }
+                @if (CanDelete)
+                {
+                    <button type="button" class="button-danger compact-button" @onclick="BulkDeleteAsync" disabled="@(IsBusy || SelectedIds.Count == 0)"><i class="fa-solid fa-trash"></i><span>@Resource.DeleteLabel selected</span></button>
+                }
+            </div>
+        }
+
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        @if (Resource.SupportsBulkActions && (CanRead || CanUpdate || CanDelete))
+                        {
+                            <th>Select</th>
+                        }
+                        @foreach (var field in DisplayFields.Take(8))
+                        {
+                            <th>@field.Name</th>
+                        }
+                        <th>Command</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Rows.Count == 0)
+                    {
+                        <tr><td colspan="9">No rows loaded.</td></tr>
+                    }
+                    @foreach (var row in Rows)
+                    {
+                        <tr>
+                            @if (Resource.SupportsBulkActions && (CanRead || CanUpdate || CanDelete))
+                            {
+                                <td>
+                                    <input type="checkbox" checked="@IsSelected(row)" @onchange="value => ToggleSelected(row, value)" />
+                                </td>
+                            }
+                            @foreach (var field in DisplayFields.Take(8))
+                            {
+                                <td>@Value(row, field.Name)</td>
+                            }
+                            <td>
+                                <div class="command-stack">
+                                    @if (CanRead)
+                                    {
+                                        <button type="button" class="button-secondary compact-button icon-text-button" @onclick="() => LoadHistoryAsync(row)"><i class="fa-solid fa-clock-rotate-left"></i><span>History</span></button>
+                                    }
+                                    @if (CanUpdate)
+                                    {
+                                        <button type="button" class="button-secondary compact-button icon-text-button" @onclick="() => Edit(row)"><i class="fa-solid fa-pen"></i><span>Edit</span></button>
+                                        @foreach (var workflowAction in AvailableWorkflowActions(row))
+                                        {
+                                            <button type="button" class="button-secondary compact-button icon-text-button" @onclick="() => RunWorkflowAsync(row, workflowAction)"><i class="fa-solid fa-diagram-project"></i><span>@workflowAction.Action</span></button>
+                                        }
+                                    }
+                                    @if (CanDelete)
+                                    {
+                                        <button type="button" class="button-danger compact-button icon-text-button" @onclick="() => DeleteAsync(row)"><i class="fa-solid fa-trash"></i><span>@Resource.DeleteLabel</span></button>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="pager">
+            <button type="button" class="button-secondary compact-button" @onclick="PreviousPageAsync" disabled="@(IsBusy || Page <= 1)">Previous</button>
+            <span>Page @Page of @TotalPages</span>
+            <button type="button" class="button-secondary compact-button" @onclick="NextPageAsync" disabled="@(IsBusy || Page >= TotalPages)">Next</button>
+            <label>
+                <span>Rows</span>
+                <select @bind="PageSize" @bind:after="ChangePageSizeAsync">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="200">200</option>
+                </select>
+            </label>
+        </div>
+    }
+</section>
+
+@if (Resource is not null && CanRead)
+{
+    <div class="form-grid">
+        @if (CanWrite)
+        {
+            <section class="panel">
+                <div class="section-title"><h2>Create</h2></div>
+                <EditForm Model="EditValues" OnValidSubmit="CreateAsync">
+                    <div class="fields">
+                        @foreach (var field in EditFields)
+                        {
+                            @FieldEditor(field)
+                        }
+                        <button type="submit" disabled="@IsBusy">Create</button>
+                    </div>
+                </EditForm>
+            </section>
+        }
+
+        @if (CanUpdate)
+        {
+            <section class="panel">
+                <div class="section-title"><h2>Update</h2></div>
+                <EditForm Model="EditValues" OnValidSubmit="UpdateAsync">
+                    <div class="fields">
+                        <label class="field">
+                            <span title="@Resource.PrimaryKey">@Resource.PrimaryKey</span>
+                            <input @bind="EditId" placeholder="@Resource.PrimaryKey" title="@Resource.PrimaryKey" />
+                        </label>
+                        @foreach (var field in EditFields)
+                        {
+                            @FieldEditor(field)
+                        }
+                        <button type="submit" disabled="@(IsBusy || string.IsNullOrWhiteSpace(EditId))">Update</button>
+                    </div>
+                </EditForm>
+            </section>
+        }
+    </div>
+
+    <section class="panel">
+        <h2>Response</h2>
+        @if (!string.IsNullOrWhiteSpace(StatusMessage))
+        {
+            <p class="status">@StatusMessage</p>
+        }
+        <pre>@ResponseBody</pre>
+    </section>
+
+    @if (HistoryRows.Count > 0)
+    {
+        <section class="panel">
+            <h2>Activity</h2>
+            <div class="table-wrap">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>When</th>
+                            <th>Action</th>
+                            <th>User</th>
+                            <th>Summary</th>
+                            <th>Changes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var history in HistoryRows)
+                        {
+                            <tr>
+                                <td>@Value(history, "occurredAtUtc")</td>
+                                <td>@Value(history, "action")</td>
+                                <td>@(Value(history, "userName") is { Length: > 0 } user ? user : Value(history, "userId"))</td>
+                                <td>@Value(history, "summary")</td>
+                                <td>@FormatChanges(Value(history, "changesJson"))</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    }
+}
+
+@code {
+    [Parameter] public string? ResourceKey { get; set; }
+    private ApiResource? Resource { get; set; }
+    private string SelectedResourceKey { get; set; } = "";
+    private string ResponseBody { get; set; } = "";
+    private string StatusMessage { get; set; } = "";
+    private string EndpointPerformance { get; set; } = "";
+    
+    private string ReadDeniedMessage { get; set; } = "";
+    private string EditId { get; set; } = "";
+    private string SearchText { get; set; } = "";
+    private string FilterField { get; set; } = "";
+    private string FilterValue { get; set; } = "";
+    private string SortBy { get; set; } = "";
+    private string SortDirection { get; set; } = "asc";
+    private string BulkField { get; set; } = "";
+    private string BulkValue { get; set; } = "";
+    private bool IsBusy { get; set; }
+    private bool IsRestoringSession { get; set; } = ApiCatalog.HasAuthentication;
+    private int Page { get; set; } = 1;
+    private int PageSize { get; set; }
+    private int TotalCount { get; set; }
+    private int TotalPages => Math.Max(1, (int)Math.Ceiling(TotalCount / (double)Math.Max(1, PageSize)));
+    private List<Dictionary<string, object?>> Rows { get; } = new();
+    private List<Dictionary<string, object?>> HistoryRows { get; } = new();
+    private HashSet<string> SelectedIds { get; } = new(StringComparer.OrdinalIgnoreCase);
+    private Dictionary<string, string?> EditValues { get; } = new(StringComparer.OrdinalIgnoreCase);
+    private Dictionary<string, List<LookupOption>> LookupOptions { get; } = new(StringComparer.OrdinalIgnoreCase);
+    
+    private bool _loadedAfterRestore;
+    private IReadOnlyList<ApiResource> ReadableResources => ApiCatalog.Resources.Where(Session.CanRead).ToList();
+    private bool CanRead => Resource is not null && Session.CanRead(Resource);
+    private bool CanWrite => Resource is not null && Session.CanWrite(Resource);
+    private bool CanUpdate => Resource is not null && Session.CanUpdate(Resource);
+    private bool CanDelete => Resource is not null && Session.CanDelete(Resource);
+    private IReadOnlyList<ApiField> DisplayFields => Resource is null ? Array.Empty<ApiField>() : Resource.Fields.Where(apiField => ApiCatalog.ShowAuditFields || !apiField.IsAuditField).ToList();
+    private IReadOnlyList<ApiField> EditFields => Resource is null ? Array.Empty<ApiField>() : Resource.Fields.Where(apiField => !apiField.IsPrimaryKey && (ApiCatalog.ShowAuditFields || !apiField.IsAuditField)).ToList();
+    private IReadOnlyList<ApiField> BulkEditableFields => EditFields;
+
+    protected override void OnInitialized()
+    {
+        Session.StateChanged += OnSessionChanged;
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var readableResources = ReadableResources;
+        SelectedResourceKey = string.IsNullOrWhiteSpace(ResourceKey) ? readableResources.FirstOrDefault()?.Key ?? "" : ResourceKey;
+        Resource = ApiCatalog.Find(SelectedResourceKey);
+        Page = 1;
+        PageSize = Resource?.DefaultPageSize ?? 25;
+        ReadDeniedMessage = "";
+        SortBy = Resource?.PrimaryKey ?? "";
+        InitializeEditValues();
+        SelectedIds.Clear();
+        HistoryRows.Clear();
+        LookupOptions.Clear();
+        BulkField = BulkEditableFields.FirstOrDefault()?.Name ?? "";
+        BulkValue = "";
+        if (!IsRestoringSession && Session.IsReady)
+        {
+            await LoadAsync();
+            StateHasChanged();
+            await LoadLookupOptionsAsync();
+            
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender || _loadedAfterRestore)
+            return;
+
+        IsRestoringSession = true;
+        await Session.RestoreAsync();
+        _loadedAfterRestore = true;
+        IsRestoringSession = false;
+        if (CanRead)
+        {
+            await LoadAsync();
+            StateHasChanged();
+            await LoadLookupOptionsAsync();
+            
+        }
+        else if (Resource is not null && Session.IsReady)
+        {
+            await LoadReadDeniedMessageAsync();
+        }
+        StateHasChanged();
+    }
+
+    private void OnSessionChanged()
+    {
+        _ = InvokeAsync(async () =>
+        {
+            if (IsRestoringSession)
+            {
+                StateHasChanged();
+                return;
+            }
+
+            if (Resource is not null && Session.IsReady && CanRead)
+            {
+                await LoadAsync();
+                StateHasChanged();
+                await LoadLookupOptionsAsync();
+            }
+            else if (Resource is not null && Session.IsReady)
+            {
+                await LoadReadDeniedMessageAsync();
+            }
+
+            StateHasChanged();
+        });
+    }
+
+    public void Dispose()
+    {
+        Session.StateChanged -= OnSessionChanged;
+        
+    }
+
+    
+
+    private void ChangeResource()
+    {
+        Navigation.NavigateTo("resources/" + SelectedResourceKey);
+    }
+
+    private void InitializeEditValues()
+    {
+        EditValues.Clear();
+        if (Resource is null)
+            return;
+
+        foreach (var field in EditFields)
+            EditValues[field.Name] = "";
+    }
+
+    private RenderFragment FieldEditor(ApiField field) => builder =>
+    {
+        var sequence = 0;
+        builder.OpenElement(sequence++, "label");
+        builder.AddAttribute(sequence++, "class", field.InputKind == "checkbox" ? "field field-check" : "field");
+        builder.OpenElement(sequence++, "span");
+        builder.AddAttribute(sequence++, "title", field.Name);
+        builder.AddContent(sequence++, field.Name);
+        builder.CloseElement();
+        if (field.HasLookup && LookupOptions.TryGetValue(field.Name, out var options))
+        {
+            builder.OpenElement(sequence++, "select");
+            builder.AddAttribute(sequence++, "title", field.Name);
+            builder.AddAttribute(sequence++, "value", EditValues.GetValueOrDefault(field.Name) ?? "");
+            builder.AddAttribute(sequence++, "onchange", EventCallback.Factory.Create<ChangeEventArgs>(this, value => EditValues[field.Name] = value.Value?.ToString()));
+            builder.OpenElement(sequence++, "option");
+            builder.AddAttribute(sequence++, "value", "");
+            builder.AddContent(sequence++, "Select...");
+            builder.CloseElement();
+            foreach (var option in options)
+            {
+                builder.OpenElement(sequence++, "option");
+                builder.AddAttribute(sequence++, "value", option.Value);
+                builder.AddContent(sequence++, option.Label);
+                builder.CloseElement();
+            }
+            builder.CloseElement();
+        }
+        else if (field.InputKind == "checkbox")
+        {
+            builder.OpenElement(sequence++, "input");
+            builder.AddAttribute(sequence++, "type", "checkbox");
+            builder.AddAttribute(sequence++, "checked", IsTrue(EditValues.GetValueOrDefault(field.Name)));
+            builder.AddAttribute(sequence++, "onchange", EventCallback.Factory.Create<ChangeEventArgs>(this, value => EditValues[field.Name] = value.Value?.ToString()));
+            builder.CloseElement();
+        }
+        else
+        {
+            builder.OpenElement(sequence++, "input");
+            builder.AddAttribute(sequence++, "type", field.InputKind);
+            builder.AddAttribute(sequence++, "placeholder", field.Name);
+            builder.AddAttribute(sequence++, "title", field.Name);
+            builder.AddAttribute(sequence++, "value", EditValues.GetValueOrDefault(field.Name) ?? "");
+            builder.AddAttribute(sequence++, "onchange", EventCallback.Factory.Create<ChangeEventArgs>(this, value => EditValues[field.Name] = value.Value?.ToString()));
+            builder.CloseElement();
+        }
+        builder.CloseElement();
+    };
+
+    private async Task LoadAsync()
+    {
+        if (Resource is null || !CanRead)
+            return;
+
+        IsBusy = true;
+        Page = Math.Max(1, Page);
+        PageSize = Math.Clamp(PageSize, 1, Resource?.MaxPageSize ?? 200);
+        var result = await Session.SendAsync(HttpMethod.Get, Resource.Route + BuildQueryString());
+        EndpointPerformance = FormatPerformance("GET", Resource.Route + BuildQueryString(), result);
+        ResponseBody = result.Body;
+        StatusMessage = FormatHttpResult(result);
+        if (result.Success)
+            ReadDeniedMessage = "";
+        ApplyPagedRows(result.Body);
+        IsBusy = false;
+    }
+
+    private async Task LoadReadDeniedMessageAsync()
+    {
+        if (Resource is null)
+            return;
+
+        Page = Math.Max(1, Page);
+        PageSize = Math.Clamp(PageSize, 1, Resource.MaxPageSize);
+        var result = await Session.SendAsync(HttpMethod.Get, Resource.Route + BuildQueryString());
+        EndpointPerformance = FormatPerformance("GET", Resource.Route + BuildQueryString(), result);
+        ReadDeniedMessage = string.IsNullOrWhiteSpace(result.UserMessage)
+            ? "Access denied."
+            : result.UserMessage;
+        ResponseBody = result.Body;
+        StatusMessage = FormatResult(result, ReadDeniedMessage);
+    }
+
+    private static string FormatHttpResult(ApiResult result) =>
+        result.Success
+            ? $"HTTP {result.StatusCode} in {FormatDuration(result.ElapsedMilliseconds)}"
+            : FormatResult(result, result.UserMessage);
+
+    private static string FormatResult(ApiResult result, string successMessage)
+    {
+        var message = result.Success ? successMessage : result.UserMessage;
+        if (string.IsNullOrWhiteSpace(message))
+            message = result.Success ? "Request completed." : "Request failed.";
+
+        return $"{message} ({FormatDuration(result.ElapsedMilliseconds)})";
+    }
+
+    private static string FormatDuration(long elapsedMilliseconds) =>
+        elapsedMilliseconds < 1000
+            ? $"{elapsedMilliseconds} ms"
+            : $"{elapsedMilliseconds / 1000d:0.00} s";
+
+    private static string FormatPerformance(string method, string path, ApiResult result) =>
+        $"{method} {path} loaded in {FormatDuration(result.ElapsedMilliseconds)}";
+
+    private async Task ApplyQueryAsync()
+    {
+        Page = 1;
+        await LoadAsync();
+    }
+
+    private async Task ClearQueryAsync()
+    {
+        SearchText = "";
+        FilterField = "";
+        FilterValue = "";
+        SortBy = Resource?.PrimaryKey ?? "";
+        SortDirection = "asc";
+        Page = 1;
+        await LoadAsync();
+    }
+
+    private async Task PreviousPageAsync()
+    {
+        if (Page <= 1)
+            return;
+
+        Page--;
+        await LoadAsync();
+    }
+
+    private async Task NextPageAsync()
+    {
+        if (Page >= TotalPages)
+            return;
+
+        Page++;
+        await LoadAsync();
+    }
+
+    private async Task ChangePageSizeAsync()
+    {
+        Page = 1;
+        await LoadAsync();
+    }
+
+    private async Task CreateAsync()
+    {
+        if (Resource is null || !CanWrite)
+            return;
+
+        IsBusy = true;
+        var result = await Session.SendAsync(HttpMethod.Post, Resource.Route, BuildBody(isCreate: true));
+        ResponseBody = result.Body;
+        StatusMessage = FormatResult(result, "Create request completed.");
+        IsBusy = false;
+        if (result.Success)
+            await LoadAsync();
+    }
+
+    private async Task UpdateAsync()
+    {
+        if (Resource is null || !CanUpdate || string.IsNullOrWhiteSpace(EditId))
+            return;
+
+        var confirmed = await Js.InvokeAsync<bool>("confirm", new object?[] { $"Update {Resource.DisplayName} record '{EditId}'?" });
+        if (!confirmed)
+            return;
+
+        IsBusy = true;
+        var result = await Session.SendAsync(HttpMethod.Put, Resource.Route + "/" + Uri.EscapeDataString(EditId), BuildBody(isCreate: false));
+        ResponseBody = result.Body;
+        StatusMessage = FormatResult(result, "Update request completed.");
+        IsBusy = false;
+        if (result.Success)
+            await LoadAsync();
+    }
+
+    private async Task DeleteAsync(Dictionary<string, object?> row)
+    {
+        if (Resource is null || !CanDelete)
+            return;
+
+        var id = Value(row, Resource.PrimaryKey);
+        if (string.IsNullOrWhiteSpace(id))
+            return;
+
+        var confirmed = await Js.InvokeAsync<bool>("confirm", new object?[] { $"{Resource.DeleteLabel} {Resource.DisplayName} record '{id}'?" });
+        if (!confirmed)
+            return;
+
+        IsBusy = true;
+        var result = await Session.SendAsync(HttpMethod.Delete, Resource.Route + "/" + Uri.EscapeDataString(id));
+        ResponseBody = result.Body;
+        StatusMessage = FormatResult(result, Resource.DeleteSuccessMessage);
+        IsBusy = false;
+        if (result.Success)
+            await LoadAsync();
+    }
+
+    private IReadOnlyList<ApiWorkflowAction> AvailableWorkflowActions(Dictionary<string, object?> row)
+    {
+        if (Resource is null || !Resource.HasWorkflow || !CanUpdate)
+            return Array.Empty<ApiWorkflowAction>();
+
+        var currentStatus = Value(row, Resource.WorkflowStatusField);
+        return Resource.WorkflowActions
+            .Where(action => string.Equals(action.From, currentStatus, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+    }
+
+    private async Task RunWorkflowAsync(Dictionary<string, object?> row, ApiWorkflowAction workflowAction)
+    {
+        if (Resource is null || !CanUpdate)
+            return;
+
+        var id = Value(row, Resource.PrimaryKey);
+        if (string.IsNullOrWhiteSpace(id))
+            return;
+
+        var confirmed = await Js.InvokeAsync<bool>("confirm", new object?[] { $"Run {workflowAction.Action} on {Resource.DisplayName} record '{id}'? {workflowAction.From} -> {workflowAction.To}" });
+        if (!confirmed)
+            return;
+
+        IsBusy = true;
+        var result = await Session.SendAsync(HttpMethod.Post, Resource.Route + "/" + Uri.EscapeDataString(id) + "/workflow/" + Uri.EscapeDataString(workflowAction.Action));
+        ResponseBody = result.Body;
+        StatusMessage = FormatResult(result, $"Workflow {workflowAction.Action} completed.");
+        IsBusy = false;
+        if (result.Success)
+            await LoadAsync();
+    }
+
+    private async Task BulkExportAsync()
+    {
+        if (Resource is null || !CanRead || SelectedIds.Count == 0)
+            return;
+
+        IsBusy = true;
+        var result = await Session.SendAsync(HttpMethod.Post, Resource.Route + "/bulk/export", new { ids = SelectedIds.ToList() });
+        ResponseBody = result.Body;
+        StatusMessage = FormatResult(result, "Bulk export request completed.");
+        IsBusy = false;
+    }
+
+    private async Task BulkUpdateAsync()
+    {
+        if (Resource is null || !CanUpdate || SelectedIds.Count == 0 || string.IsNullOrWhiteSpace(BulkField))
+            return;
+
+        var confirmed = await Js.InvokeAsync<bool>("confirm", new object?[] { $"Update {SelectedIds.Count} selected {Resource.DisplayName} row(s)?" });
+        if (!confirmed)
+            return;
+
+        IsBusy = true;
+        var result = await Session.SendAsync(HttpMethod.Patch, Resource.Route + "/bulk", new { ids = SelectedIds.ToList(), field = BulkField, value = BulkValue });
+        ResponseBody = result.Body;
+        StatusMessage = FormatResult(result, "Bulk update request completed.");
+        IsBusy = false;
+        if (result.Success)
+            await LoadAsync();
+    }
+
+    private async Task BulkDeleteAsync()
+    {
+        if (Resource is null || SelectedIds.Count == 0 || !CanDelete)
+            return;
+
+        var confirmed = await Js.InvokeAsync<bool>("confirm", new object?[] { $"{Resource.DeleteLabel} {SelectedIds.Count} selected {Resource.DisplayName} row(s)?" });
+        if (!confirmed)
+            return;
+
+        IsBusy = true;
+        var result = await Session.SendAsync(HttpMethod.Post, Resource.Route + "/bulk/delete", new { ids = SelectedIds.ToList() });
+        ResponseBody = result.Body;
+        StatusMessage = FormatResult(result, Resource.DeleteSuccessMessage);
+        IsBusy = false;
+        if (result.Success)
+        {
+            SelectedIds.Clear();
+            await LoadAsync();
+        }
+    }
+
+    private async Task LoadHistoryAsync(Dictionary<string, object?> row)
+    {
+        if (Resource is null || !CanRead)
+            return;
+
+        var id = Value(row, Resource.PrimaryKey);
+        if (string.IsNullOrWhiteSpace(id))
+            return;
+
+        IsBusy = true;
+        var result = await Session.SendAsync(HttpMethod.Get, Resource.Route + "/" + Uri.EscapeDataString(id) + "/history");
+        ResponseBody = result.Body;
+        StatusMessage = FormatResult(result, $"Loaded activity for {Resource.DisplayName} record '{id}'.");
+        HistoryRows.Clear();
+        if (result.Success)
+            HistoryRows.AddRange(ParseRows(result.Body));
+        IsBusy = false;
+    }
+
+    private string BuildQueryString()
+    {
+        var values = new Dictionary<string, string?>
+        {
+            ["page"] = Page.ToString(),
+            ["pageSize"] = PageSize.ToString(),
+            ["search"] = SearchText,
+            ["filterField"] = FilterField,
+            ["filterValue"] = FilterValue,
+            ["sortBy"] = SortBy,
+            ["sortDirection"] = SortDirection
+        };
+
+        return "?" + string.Join("&", values
+            .Where(pair => !string.IsNullOrWhiteSpace(pair.Value))
+            .Select(pair => Uri.EscapeDataString(pair.Key) + "=" + Uri.EscapeDataString(pair.Value!)));
+    }
+
+    private void Edit(Dictionary<string, object?> row)
+    {
+        if (Resource is null || !CanUpdate)
+            return;
+
+        EditId = Value(row, Resource.PrimaryKey);
+        foreach (var field in EditFields)
+            EditValues[field.Name] = Value(row, field.Name);
+    }
+
+    private bool IsSelected(Dictionary<string, object?> row)
+    {
+        if (Resource is null)
+            return false;
+
+        var id = Value(row, Resource.PrimaryKey);
+        return !string.IsNullOrWhiteSpace(id) && SelectedIds.Contains(id);
+    }
+
+    private void ToggleSelected(Dictionary<string, object?> row, ChangeEventArgs args)
+    {
+        if (Resource is null)
+            return;
+
+        var id = Value(row, Resource.PrimaryKey);
+        if (string.IsNullOrWhiteSpace(id))
+            return;
+
+        if (IsTrue(args.Value?.ToString()))
+            SelectedIds.Add(id);
+        else
+            SelectedIds.Remove(id);
+    }
+
+    private void SelectPageRows()
+    {
+        if (Resource is null)
+            return;
+
+        foreach (var row in Rows)
+        {
+            var id = Value(row, Resource.PrimaryKey);
+            if (!string.IsNullOrWhiteSpace(id))
+                SelectedIds.Add(id);
+        }
+    }
+
+    private void ClearSelectedRows() => SelectedIds.Clear();
+
+    private Dictionary<string, object?> BuildBody(bool isCreate)
+    {
+        var body = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase);
+        foreach (var field in EditFields)
+        {
+            var raw = EditValues.GetValueOrDefault(field.Name);
+            if (string.IsNullOrWhiteSpace(raw))
+                continue;
+
+            body[field.Name] = ParseValue(raw, field.ClrType);
+        }
+
+        return body;
+    }
+
+    private async Task LoadLookupOptionsAsync()
+    {
+        if (Resource is null || !CanRead)
+            return;
+
+        var fields = EditFields.Where(field => field.HasLookup).ToList();
+        if (fields.Count == 0)
+            return;
+
+        var loaded = await Task.WhenAll(fields.Select(async field =>
+        {
+            var result = await Session.SendAsync(HttpMethod.Get, field.LookupRoute + "?page=1&pageSize=200");
+            if (!result.Success)
+                return (field.Name, Options: new List<LookupOption>());
+
+            var options = ParseRows(result.Body)
+                .Select(row =>
+                {
+                    var value = Value(row, field.LookupValueField);
+                    var label = row.Values.Select(value => value?.ToString()).FirstOrDefault(value => !string.IsNullOrWhiteSpace(value) && value != field.LookupValueField) ?? value;
+                    return new LookupOption(value, label);
+                })
+                .Where(option => !string.IsNullOrWhiteSpace(option.Value))
+                .ToList();
+
+            return (field.Name, Options: options);
+        }));
+
+        foreach (var item in loaded)
+        {
+            if (item.Options.Count > 0)
+                LookupOptions[item.Name] = item.Options;
+        }
+    }
+
+    private void ApplyPagedRows(string json)
+    {
+        Rows.Clear();
+        var pageInfo = ParsePagedRows(json);
+        foreach (var row in pageInfo.Rows)
+            Rows.Add(row);
+
+        Page = pageInfo.Page;
+        PageSize = pageInfo.PageSize;
+        TotalCount = pageInfo.TotalCount;
+    }
+
+    private static IEnumerable<Dictionary<string, object?>> ParseRows(string json)
+    {
+        if (string.IsNullOrWhiteSpace(json))
+            yield break;
+
+        using var doc = JsonDocument.Parse(json);
+        var root = UnwrapApiResponseBody(doc.RootElement);
+        var source = root.ValueKind == JsonValueKind.Array
+            ? root
+            : root.TryGetProperty("items", out var items) ? items : default;
+        if (source.ValueKind != JsonValueKind.Array)
+            yield break;
+
+        foreach (var item in source.EnumerateArray())
+        {
+            if (item.ValueKind != JsonValueKind.Object)
+                continue;
+
+            yield return item.EnumerateObject().ToDictionary(property => property.Name, property => (object?)property.Value.ToString(), StringComparer.OrdinalIgnoreCase);
+        }
+    }
+
+    private static PageEnvelope ParsePagedRows(string json)
+    {
+        if (string.IsNullOrWhiteSpace(json))
+            return new PageEnvelope(new List<Dictionary<string, object?>>(), 1, 50, 0);
+
+        using var doc = JsonDocument.Parse(json);
+        var root = UnwrapApiResponseBody(doc.RootElement);
+        if (root.ValueKind == JsonValueKind.Array)
+        {
+            var rows = ReadRows(root);
+            return new PageEnvelope(rows, 1, rows.Count, rows.Count);
+        }
+
+        if (root.ValueKind != JsonValueKind.Object ||
+            !root.TryGetProperty("items", out var items) ||
+            items.ValueKind != JsonValueKind.Array)
+        {
+            return new PageEnvelope(new List<Dictionary<string, object?>>(), 1, 50, 0);
+        }
+
+        var page = ReadInt(root, "page", 1);
+        var pageSize = ReadInt(root, "pageSize", 50);
+        var totalCount = ReadInt(root, "totalCount", items.GetArrayLength());
+        return new PageEnvelope(ReadRows(items), page, pageSize, totalCount);
+    }
+
+    private static JsonElement UnwrapApiResponseBody(JsonElement root)
+    {
+        if (root.ValueKind == JsonValueKind.Object && root.TryGetProperty("body", out var body))
+            return body;
+
+        return root;
+    }
+
+    private static List<Dictionary<string, object?>> ReadRows(JsonElement source)
+    {
+        var rows = new List<Dictionary<string, object?>>();
+        foreach (var item in source.EnumerateArray())
+        {
+            if (item.ValueKind != JsonValueKind.Object)
+                continue;
+
+            rows.Add(item.EnumerateObject().ToDictionary(property => property.Name, property => (object?)property.Value.ToString(), StringComparer.OrdinalIgnoreCase));
+        }
+
+        return rows;
+    }
+
+    private static int ReadInt(JsonElement element, string name, int fallback)
+    {
+        foreach (var property in element.EnumerateObject())
+        {
+            if (!string.Equals(property.Name, name, StringComparison.OrdinalIgnoreCase))
+                continue;
+
+            if (property.Value.ValueKind == JsonValueKind.Number && property.Value.TryGetInt32(out var number))
+                return number;
+            if (property.Value.ValueKind == JsonValueKind.String && int.TryParse(property.Value.GetString(), out number))
+                return number;
+        }
+
+        return fallback;
+    }
+
+    private static string Value(Dictionary<string, object?> row, string field) =>
+        row.TryGetValue(field, out var value) ? value?.ToString() ?? "" : "";
+
+    private static string FormatChanges(string changesJson)
+    {
+        if (string.IsNullOrWhiteSpace(changesJson))
+            return "";
+
+        try
+        {
+            using var doc = JsonDocument.Parse(changesJson);
+            if (doc.RootElement.ValueKind != JsonValueKind.Array)
+                return changesJson;
+
+            var changes = new List<string>();
+            foreach (var change in doc.RootElement.EnumerateArray())
+            {
+                if (change.ValueKind != JsonValueKind.Object)
+                    continue;
+
+                var column = JsonText(change, "column");
+                if (string.IsNullOrWhiteSpace(column))
+                    continue;
+
+                changes.Add($"{column}: {JsonText(change, "before")} -> {JsonText(change, "after")}");
+            }
+
+            return changes.Count == 0 ? "" : string.Join("; ", changes);
+        }
+        catch
+        {
+            return changesJson;
+        }
+    }
+
+    private static string JsonText(JsonElement element, string name)
+    {
+        foreach (var property in element.EnumerateObject())
+        {
+            if (string.Equals(property.Name, name, StringComparison.OrdinalIgnoreCase))
+                return property.Value.ValueKind == JsonValueKind.Null ? "<null>" : property.Value.ToString();
+        }
+
+        return "";
+    }
+
+    private static object? ParseValue(string raw, string type)
+    {
+        if ((type is "int" or "long" or "short" or "byte") && long.TryParse(raw, out var integer))
+            return integer;
+        if ((type is "decimal" or "double" or "float") && decimal.TryParse(raw, out var number))
+            return number;
+        if (type == "bool" && IsTrue(raw))
+            return true;
+        if (type == "bool")
+            return false;
+        return raw;
+    }
+
+    private static bool IsTrue(string? value) =>
+        string.Equals(value, "true", StringComparison.OrdinalIgnoreCase) ||
+        string.Equals(value, "on", StringComparison.OrdinalIgnoreCase);
+
+    private sealed record PageEnvelope(List<Dictionary<string, object?>> Rows, int Page, int PageSize, int TotalCount);
+}

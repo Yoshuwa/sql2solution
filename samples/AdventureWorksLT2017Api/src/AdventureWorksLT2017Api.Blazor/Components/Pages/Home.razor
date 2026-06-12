@@ -1,0 +1,27 @@
+﻿@page "/"
+@inject ApiSession Session
+
+<section class="hero">
+    <div>
+        <h1>API client dashboard</h1>
+        <p>Browse generated resources, inspect API responses, and run simple create requests from this Blazor web app.</p>
+    </div>
+    <div class="metric">
+        <strong>@ReadableResources.Count</strong>
+        <span>resources</span>
+    </div>
+</section>
+
+<section class="resource-grid">
+    @foreach (var resource in ReadableResources)
+    {
+        <a class="resource-card" href="@($"resources/{resource.Key}")">
+            <strong>@resource.DisplayName</strong>
+            <span>@resource.Route</span>
+        </a>
+    }
+</section>
+
+@code {
+    private IReadOnlyList<ApiResource> ReadableResources => ApiCatalog.Resources.Where(Session.CanRead).ToList();
+}
