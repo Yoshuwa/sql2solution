@@ -1,0 +1,3878 @@
+﻿{
+  "info": {
+    "name": "MiningFleetOps API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://localhost:5001"
+    }
+  ],
+  "item": [
+    {
+      "name": "DowntimeEvent",
+      "item": [
+        {
+          "name": "DowntimeEvent - Get all",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/downtimeEvents?page=1\u0026pageSize=25",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "downtimeEvents?page=1\u0026pageSize=25"
+              ]
+            }
+          }
+        },
+        {
+          "name": "DowntimeEvent - Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/downtimeEvents",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "downtimeEvents"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022EquipmentId\u0022: 1,\r\n  \u0022WorkOrderId\u0022: 1,\r\n  \u0022StartedAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022EndedAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022ReasonCategory\u0022: \u0022sample-ReasonCategory\u0022,\r\n  \u0022ReasonDetail\u0022: \u0022sample-ReasonDetail\u0022,\r\n  \u0022IsPlanned\u0022: true,\r\n  \u0022DowntimeHours\u0022: 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "DowntimeEvent - Get by id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/downtimeEvents/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "downtimeEvents",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "DowntimeEvent - Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/downtimeEvents/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "downtimeEvents",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022EquipmentId\u0022: 1,\r\n  \u0022WorkOrderId\u0022: 1,\r\n  \u0022StartedAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022EndedAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022ReasonCategory\u0022: \u0022sample-ReasonCategory\u0022,\r\n  \u0022ReasonDetail\u0022: \u0022sample-ReasonDetail\u0022,\r\n  \u0022IsPlanned\u0022: true,\r\n  \u0022DowntimeHours\u0022: 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "DowntimeEvent - Patch",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/downtimeEvents/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "downtimeEvents",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022EquipmentId\u0022: 1,\r\n  \u0022WorkOrderId\u0022: 1,\r\n  \u0022StartedAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022EndedAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022ReasonCategory\u0022: \u0022sample-ReasonCategory\u0022,\r\n  \u0022ReasonDetail\u0022: \u0022sample-ReasonDetail\u0022,\r\n  \u0022IsPlanned\u0022: true,\r\n  \u0022DowntimeHours\u0022: 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "DowntimeEvent - Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/downtimeEvents/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "downtimeEvents",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Employee",
+      "item": [
+        {
+          "name": "Employee - Get all",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/employees?page=1\u0026pageSize=25",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "employees?page=1\u0026pageSize=25"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Employee - Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/employees",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "employees"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022SiteId\u0022: 1,\r\n  \u0022EmployeeCode\u0022: \u0022sample-EmployeeCode\u0022,\r\n  \u0022FullName\u0022: \u0022sample-FullName\u0022,\r\n  \u0022RoleName\u0022: \u0022sample-RoleName\u0022,\r\n  \u0022LicenseClass\u0022: \u0022sample-LicenseClass\u0022,\r\n  \u0022Phone\u0022: \u0022\\u002B1-555-0100\u0022,\r\n  \u0022Email\u0022: \u0022user@example.com\u0022,\r\n  \u0022IsActive\u0022: true,\r\n  \u0022CreatedAt\u0022: \u00222026-01-01T00:00:00Z\u0022\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Employee - Get by id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/employees/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "employees",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Employee - Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/employees/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "employees",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022SiteId\u0022: 1,\r\n  \u0022EmployeeCode\u0022: \u0022sample-EmployeeCode\u0022,\r\n  \u0022FullName\u0022: \u0022sample-FullName\u0022,\r\n  \u0022RoleName\u0022: \u0022sample-RoleName\u0022,\r\n  \u0022LicenseClass\u0022: \u0022sample-LicenseClass\u0022,\r\n  \u0022Phone\u0022: \u0022\\u002B1-555-0100\u0022,\r\n  \u0022Email\u0022: \u0022user@example.com\u0022,\r\n  \u0022IsActive\u0022: true,\r\n  \u0022CreatedAt\u0022: \u00222026-01-01T00:00:00Z\u0022\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Employee - Patch",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/employees/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "employees",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022SiteId\u0022: 1,\r\n  \u0022EmployeeCode\u0022: \u0022sample-EmployeeCode\u0022,\r\n  \u0022FullName\u0022: \u0022sample-FullName\u0022,\r\n  \u0022RoleName\u0022: \u0022sample-RoleName\u0022,\r\n  \u0022LicenseClass\u0022: \u0022sample-LicenseClass\u0022,\r\n  \u0022Phone\u0022: \u0022\\u002B1-555-0100\u0022,\r\n  \u0022Email\u0022: \u0022user@example.com\u0022,\r\n  \u0022IsActive\u0022: true,\r\n  \u0022CreatedAt\u0022: \u00222026-01-01T00:00:00Z\u0022\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Employee - Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/employees/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "employees",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Equipment",
+      "item": [
+        {
+          "name": "Equipment - Get all",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/equipments?page=1\u0026pageSize=25",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "equipments?page=1\u0026pageSize=25"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Equipment - Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/equipments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "equipments"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022SiteId\u0022: 1,\r\n  \u0022EquipmentClassId\u0022: 1,\r\n  \u0022AssetTag\u0022: \u0022sample-AssetTag\u0022,\r\n  \u0022SerialNumber\u0022: \u0022sample-SerialNumber\u0022,\r\n  \u0022Manufacturer\u0022: \u0022sample-Manufacturer\u0022,\r\n  \u0022Model\u0022: \u0022sample-Model\u0022,\r\n  \u0022CommissionDate\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022FuelTypeId\u0022: 1,\r\n  \u0022TankCapacityL\u0022: 1,\r\n  \u0022CurrentHourMeter\u0022: 1,\r\n  \u0022CurrentOdometerKm\u0022: 1,\r\n  \u0022Status\u0022: \u0022sample-Status\u0022,\r\n  \u0022IsActive\u0022: true,\r\n  \u0022CreatedAt\u0022: \u00222026-01-01T00:00:00Z\u0022\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Equipment - Get by id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/equipments/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "equipments",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Equipment - Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/equipments/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "equipments",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022SiteId\u0022: 1,\r\n  \u0022EquipmentClassId\u0022: 1,\r\n  \u0022AssetTag\u0022: \u0022sample-AssetTag\u0022,\r\n  \u0022SerialNumber\u0022: \u0022sample-SerialNumber\u0022,\r\n  \u0022Manufacturer\u0022: \u0022sample-Manufacturer\u0022,\r\n  \u0022Model\u0022: \u0022sample-Model\u0022,\r\n  \u0022CommissionDate\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022FuelTypeId\u0022: 1,\r\n  \u0022TankCapacityL\u0022: 1,\r\n  \u0022CurrentHourMeter\u0022: 1,\r\n  \u0022CurrentOdometerKm\u0022: 1,\r\n  \u0022Status\u0022: \u0022sample-Status\u0022,\r\n  \u0022IsActive\u0022: true,\r\n  \u0022CreatedAt\u0022: \u00222026-01-01T00:00:00Z\u0022\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Equipment - Patch",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/equipments/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "equipments",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022SiteId\u0022: 1,\r\n  \u0022EquipmentClassId\u0022: 1,\r\n  \u0022AssetTag\u0022: \u0022sample-AssetTag\u0022,\r\n  \u0022SerialNumber\u0022: \u0022sample-SerialNumber\u0022,\r\n  \u0022Manufacturer\u0022: \u0022sample-Manufacturer\u0022,\r\n  \u0022Model\u0022: \u0022sample-Model\u0022,\r\n  \u0022CommissionDate\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022FuelTypeId\u0022: 1,\r\n  \u0022TankCapacityL\u0022: 1,\r\n  \u0022CurrentHourMeter\u0022: 1,\r\n  \u0022CurrentOdometerKm\u0022: 1,\r\n  \u0022Status\u0022: \u0022sample-Status\u0022,\r\n  \u0022IsActive\u0022: true,\r\n  \u0022CreatedAt\u0022: \u00222026-01-01T00:00:00Z\u0022\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Equipment - Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/equipments/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "equipments",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "EquipmentClass",
+      "item": [
+        {
+          "name": "EquipmentClass - Get all",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/equipmentClass?page=1\u0026pageSize=25",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "equipmentClass?page=1\u0026pageSize=25"
+              ]
+            }
+          }
+        },
+        {
+          "name": "EquipmentClass - Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/equipmentClass",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "equipmentClass"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022ClassCode\u0022: \u0022sample-ClassCode\u0022,\r\n  \u0022ClassName\u0022: \u0022sample-ClassName\u0022,\r\n  \u0022CategoryName\u0022: \u0022sample-CategoryName\u0022,\r\n  \u0022TypicalPayloadTonnes\u0022: 1,\r\n  \u0022DefaultFuelBurnLph\u0022: 1,\r\n  \u0022MaintenanceIntervalHours\u0022: 1,\r\n  \u0022OilIntervalHours\u0022: 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "EquipmentClass - Get by id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/equipmentClass/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "equipmentClass",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "EquipmentClass - Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/equipmentClass/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "equipmentClass",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022ClassCode\u0022: \u0022sample-ClassCode\u0022,\r\n  \u0022ClassName\u0022: \u0022sample-ClassName\u0022,\r\n  \u0022CategoryName\u0022: \u0022sample-CategoryName\u0022,\r\n  \u0022TypicalPayloadTonnes\u0022: 1,\r\n  \u0022DefaultFuelBurnLph\u0022: 1,\r\n  \u0022MaintenanceIntervalHours\u0022: 1,\r\n  \u0022OilIntervalHours\u0022: 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "EquipmentClass - Patch",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/equipmentClass/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "equipmentClass",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022ClassCode\u0022: \u0022sample-ClassCode\u0022,\r\n  \u0022ClassName\u0022: \u0022sample-ClassName\u0022,\r\n  \u0022CategoryName\u0022: \u0022sample-CategoryName\u0022,\r\n  \u0022TypicalPayloadTonnes\u0022: 1,\r\n  \u0022DefaultFuelBurnLph\u0022: 1,\r\n  \u0022MaintenanceIntervalHours\u0022: 1,\r\n  \u0022OilIntervalHours\u0022: 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "EquipmentClass - Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/equipmentClass/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "equipmentClass",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "FluidSample",
+      "item": [
+        {
+          "name": "FluidSample - Get all",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/fluidSamples?page=1\u0026pageSize=25",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "fluidSamples?page=1\u0026pageSize=25"
+              ]
+            }
+          }
+        },
+        {
+          "name": "FluidSample - Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/fluidSamples",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "fluidSamples"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022EquipmentId\u0022: 1,\r\n  \u0022FluidTypeId\u0022: 1,\r\n  \u0022SampledAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022HourMeter\u0022: 1,\r\n  \u0022LabReference\u0022: \u0022sample-LabReference\u0022,\r\n  \u0022IronPpm\u0022: 1,\r\n  \u0022CopperPpm\u0022: 1,\r\n  \u0022SiliconPpm\u0022: 1,\r\n  \u0022ViscosityCst\u0022: 1,\r\n  \u0022WaterPercent\u0022: 1,\r\n  \u0022Severity\u0022: \u0022sample-Severity\u0022,\r\n  \u0022Recommendation\u0022: \u0022sample-Recommendation\u0022\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "FluidSample - Get by id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/fluidSamples/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "fluidSamples",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "FluidSample - Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/fluidSamples/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "fluidSamples",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022EquipmentId\u0022: 1,\r\n  \u0022FluidTypeId\u0022: 1,\r\n  \u0022SampledAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022HourMeter\u0022: 1,\r\n  \u0022LabReference\u0022: \u0022sample-LabReference\u0022,\r\n  \u0022IronPpm\u0022: 1,\r\n  \u0022CopperPpm\u0022: 1,\r\n  \u0022SiliconPpm\u0022: 1,\r\n  \u0022ViscosityCst\u0022: 1,\r\n  \u0022WaterPercent\u0022: 1,\r\n  \u0022Severity\u0022: \u0022sample-Severity\u0022,\r\n  \u0022Recommendation\u0022: \u0022sample-Recommendation\u0022\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "FluidSample - Patch",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/fluidSamples/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "fluidSamples",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022EquipmentId\u0022: 1,\r\n  \u0022FluidTypeId\u0022: 1,\r\n  \u0022SampledAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022HourMeter\u0022: 1,\r\n  \u0022LabReference\u0022: \u0022sample-LabReference\u0022,\r\n  \u0022IronPpm\u0022: 1,\r\n  \u0022CopperPpm\u0022: 1,\r\n  \u0022SiliconPpm\u0022: 1,\r\n  \u0022ViscosityCst\u0022: 1,\r\n  \u0022WaterPercent\u0022: 1,\r\n  \u0022Severity\u0022: \u0022sample-Severity\u0022,\r\n  \u0022Recommendation\u0022: \u0022sample-Recommendation\u0022\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "FluidSample - Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/fluidSamples/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "fluidSamples",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "FluidService",
+      "item": [
+        {
+          "name": "FluidService - Get all",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/fluidServices?page=1\u0026pageSize=25",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "fluidServices?page=1\u0026pageSize=25"
+              ]
+            }
+          }
+        },
+        {
+          "name": "FluidService - Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/fluidServices",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "fluidServices"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022EquipmentId\u0022: 1,\r\n  \u0022FluidTypeId\u0022: 1,\r\n  \u0022ServicedAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022HourMeter\u0022: 1,\r\n  \u0022LitersChanged\u0022: 1,\r\n  \u0022FilterChanged\u0022: true,\r\n  \u0022WorkOrderId\u0022: 1,\r\n  \u0022TechnicianEmployeeId\u0022: 1,\r\n  \u0022NextDueHourMeter\u0022: 1,\r\n  \u0022Notes\u0022: \u0022sample-Notes\u0022\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "FluidService - Get by id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/fluidServices/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "fluidServices",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "FluidService - Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/fluidServices/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "fluidServices",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022EquipmentId\u0022: 1,\r\n  \u0022FluidTypeId\u0022: 1,\r\n  \u0022ServicedAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022HourMeter\u0022: 1,\r\n  \u0022LitersChanged\u0022: 1,\r\n  \u0022FilterChanged\u0022: true,\r\n  \u0022WorkOrderId\u0022: 1,\r\n  \u0022TechnicianEmployeeId\u0022: 1,\r\n  \u0022NextDueHourMeter\u0022: 1,\r\n  \u0022Notes\u0022: \u0022sample-Notes\u0022\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "FluidService - Patch",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/fluidServices/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "fluidServices",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022EquipmentId\u0022: 1,\r\n  \u0022FluidTypeId\u0022: 1,\r\n  \u0022ServicedAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022HourMeter\u0022: 1,\r\n  \u0022LitersChanged\u0022: 1,\r\n  \u0022FilterChanged\u0022: true,\r\n  \u0022WorkOrderId\u0022: 1,\r\n  \u0022TechnicianEmployeeId\u0022: 1,\r\n  \u0022NextDueHourMeter\u0022: 1,\r\n  \u0022Notes\u0022: \u0022sample-Notes\u0022\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "FluidService - Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/fluidServices/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "fluidServices",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "FluidType",
+      "item": [
+        {
+          "name": "FluidType - Get all",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/fluidTypes?page=1\u0026pageSize=25",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "fluidTypes?page=1\u0026pageSize=25"
+              ]
+            }
+          }
+        },
+        {
+          "name": "FluidType - Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/fluidTypes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "fluidTypes"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022FluidCode\u0022: \u0022sample-FluidCode\u0022,\r\n  \u0022FluidName\u0022: \u0022sample-FluidName\u0022,\r\n  \u0022FluidCategory\u0022: \u0022sample-FluidCategory\u0022,\r\n  \u0022DefaultIntervalHours\u0022: 1,\r\n  \u0022IsActive\u0022: true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "FluidType - Get by id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/fluidTypes/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "fluidTypes",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "FluidType - Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/fluidTypes/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "fluidTypes",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022FluidCode\u0022: \u0022sample-FluidCode\u0022,\r\n  \u0022FluidName\u0022: \u0022sample-FluidName\u0022,\r\n  \u0022FluidCategory\u0022: \u0022sample-FluidCategory\u0022,\r\n  \u0022DefaultIntervalHours\u0022: 1,\r\n  \u0022IsActive\u0022: true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "FluidType - Patch",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/fluidTypes/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "fluidTypes",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022FluidCode\u0022: \u0022sample-FluidCode\u0022,\r\n  \u0022FluidName\u0022: \u0022sample-FluidName\u0022,\r\n  \u0022FluidCategory\u0022: \u0022sample-FluidCategory\u0022,\r\n  \u0022DefaultIntervalHours\u0022: 1,\r\n  \u0022IsActive\u0022: true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "FluidType - Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/fluidTypes/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "fluidTypes",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "FuelLog",
+      "item": [
+        {
+          "name": "FuelLog - Get all",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/fuelLogs?page=1\u0026pageSize=25",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "fuelLogs?page=1\u0026pageSize=25"
+              ]
+            }
+          }
+        },
+        {
+          "name": "FuelLog - Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/fuelLogs",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "fuelLogs"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022EquipmentId\u0022: 1,\r\n  \u0022FuelTypeId\u0022: 1,\r\n  \u0022FueledAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022ShiftId\u0022: 1,\r\n  \u0022EmployeeId\u0022: 1,\r\n  \u0022PitId\u0022: 1,\r\n  \u0022HourMeter\u0022: 1,\r\n  \u0022OdometerKm\u0022: 1,\r\n  \u0022Liters\u0022: 1,\r\n  \u0022UnitCost\u0022: 1,\r\n  \u0022HoursSinceLastFuel\u0022: 1,\r\n  \u0022FuelBurnLph\u0022: 1,\r\n  \u0022Co2KgPerL\u0022: 1,\r\n  \u0022SourceName\u0022: \u0022sample-SourceName\u0022,\r\n  \u0022Notes\u0022: \u0022sample-Notes\u0022,\r\n  \u0022CreatedAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022CostAmount\u0022: 1,\r\n  \u0022Co2Kg\u0022: 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "FuelLog - Get by id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/fuelLogs/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "fuelLogs",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "FuelLog - Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/fuelLogs/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "fuelLogs",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022EquipmentId\u0022: 1,\r\n  \u0022FuelTypeId\u0022: 1,\r\n  \u0022FueledAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022ShiftId\u0022: 1,\r\n  \u0022EmployeeId\u0022: 1,\r\n  \u0022PitId\u0022: 1,\r\n  \u0022HourMeter\u0022: 1,\r\n  \u0022OdometerKm\u0022: 1,\r\n  \u0022Liters\u0022: 1,\r\n  \u0022UnitCost\u0022: 1,\r\n  \u0022HoursSinceLastFuel\u0022: 1,\r\n  \u0022FuelBurnLph\u0022: 1,\r\n  \u0022Co2KgPerL\u0022: 1,\r\n  \u0022SourceName\u0022: \u0022sample-SourceName\u0022,\r\n  \u0022Notes\u0022: \u0022sample-Notes\u0022,\r\n  \u0022CreatedAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022CostAmount\u0022: 1,\r\n  \u0022Co2Kg\u0022: 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "FuelLog - Patch",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/fuelLogs/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "fuelLogs",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022EquipmentId\u0022: 1,\r\n  \u0022FuelTypeId\u0022: 1,\r\n  \u0022FueledAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022ShiftId\u0022: 1,\r\n  \u0022EmployeeId\u0022: 1,\r\n  \u0022PitId\u0022: 1,\r\n  \u0022HourMeter\u0022: 1,\r\n  \u0022OdometerKm\u0022: 1,\r\n  \u0022Liters\u0022: 1,\r\n  \u0022UnitCost\u0022: 1,\r\n  \u0022HoursSinceLastFuel\u0022: 1,\r\n  \u0022FuelBurnLph\u0022: 1,\r\n  \u0022Co2KgPerL\u0022: 1,\r\n  \u0022SourceName\u0022: \u0022sample-SourceName\u0022,\r\n  \u0022Notes\u0022: \u0022sample-Notes\u0022,\r\n  \u0022CreatedAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022CostAmount\u0022: 1,\r\n  \u0022Co2Kg\u0022: 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "FuelLog - Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/fuelLogs/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "fuelLogs",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "FuelType",
+      "item": [
+        {
+          "name": "FuelType - Get all",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/fuelTypes?page=1\u0026pageSize=25",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "fuelTypes?page=1\u0026pageSize=25"
+              ]
+            }
+          }
+        },
+        {
+          "name": "FuelType - Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/fuelTypes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "fuelTypes"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022FuelCode\u0022: \u0022sample-FuelCode\u0022,\r\n  \u0022FuelName\u0022: \u0022sample-FuelName\u0022,\r\n  \u0022EnergyDensityMjPerL\u0022: 1,\r\n  \u0022Co2KgPerL\u0022: 1,\r\n  \u0022IsActive\u0022: true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "FuelType - Get by id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/fuelTypes/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "fuelTypes",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "FuelType - Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/fuelTypes/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "fuelTypes",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022FuelCode\u0022: \u0022sample-FuelCode\u0022,\r\n  \u0022FuelName\u0022: \u0022sample-FuelName\u0022,\r\n  \u0022EnergyDensityMjPerL\u0022: 1,\r\n  \u0022Co2KgPerL\u0022: 1,\r\n  \u0022IsActive\u0022: true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "FuelType - Patch",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/fuelTypes/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "fuelTypes",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022FuelCode\u0022: \u0022sample-FuelCode\u0022,\r\n  \u0022FuelName\u0022: \u0022sample-FuelName\u0022,\r\n  \u0022EnergyDensityMjPerL\u0022: 1,\r\n  \u0022Co2KgPerL\u0022: 1,\r\n  \u0022IsActive\u0022: true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "FuelType - Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/fuelTypes/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "fuelTypes",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "HaulCycle",
+      "item": [
+        {
+          "name": "HaulCycle - Get all",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/haulCycles?page=1\u0026pageSize=25",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "haulCycles?page=1\u0026pageSize=25"
+              ]
+            }
+          }
+        },
+        {
+          "name": "HaulCycle - Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/haulCycles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "haulCycles"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022EquipmentId\u0022: 1,\r\n  \u0022OperatorEmployeeId\u0022: 1,\r\n  \u0022ShiftId\u0022: 1,\r\n  \u0022PitId\u0022: 1,\r\n  \u0022MaterialId\u0022: 1,\r\n  \u0022CycleStartedAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022CycleEndedAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022LoadedTonnes\u0022: 1,\r\n  \u0022DistanceKm\u0022: 1,\r\n  \u0022FuelLitersEstimated\u0022: 1,\r\n  \u0022TonnesPerHour\u0022: 1,\r\n  \u0022CycleMinutes\u0022: 1,\r\n  \u0022TonnesKm\u0022: 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "HaulCycle - Get by id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/haulCycles/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "haulCycles",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "HaulCycle - Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/haulCycles/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "haulCycles",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022EquipmentId\u0022: 1,\r\n  \u0022OperatorEmployeeId\u0022: 1,\r\n  \u0022ShiftId\u0022: 1,\r\n  \u0022PitId\u0022: 1,\r\n  \u0022MaterialId\u0022: 1,\r\n  \u0022CycleStartedAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022CycleEndedAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022LoadedTonnes\u0022: 1,\r\n  \u0022DistanceKm\u0022: 1,\r\n  \u0022FuelLitersEstimated\u0022: 1,\r\n  \u0022TonnesPerHour\u0022: 1,\r\n  \u0022CycleMinutes\u0022: 1,\r\n  \u0022TonnesKm\u0022: 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "HaulCycle - Patch",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/haulCycles/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "haulCycles",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022EquipmentId\u0022: 1,\r\n  \u0022OperatorEmployeeId\u0022: 1,\r\n  \u0022ShiftId\u0022: 1,\r\n  \u0022PitId\u0022: 1,\r\n  \u0022MaterialId\u0022: 1,\r\n  \u0022CycleStartedAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022CycleEndedAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022LoadedTonnes\u0022: 1,\r\n  \u0022DistanceKm\u0022: 1,\r\n  \u0022FuelLitersEstimated\u0022: 1,\r\n  \u0022TonnesPerHour\u0022: 1,\r\n  \u0022CycleMinutes\u0022: 1,\r\n  \u0022TonnesKm\u0022: 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "HaulCycle - Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/haulCycles/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "haulCycles",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "MaintenancePlan",
+      "item": [
+        {
+          "name": "MaintenancePlan - Get all",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/maintenancePlans?page=1\u0026pageSize=25",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "maintenancePlans?page=1\u0026pageSize=25"
+              ]
+            }
+          }
+        },
+        {
+          "name": "MaintenancePlan - Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/maintenancePlans",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "maintenancePlans"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022EquipmentClassId\u0022: 1,\r\n  \u0022PlanCode\u0022: \u0022sample-PlanCode\u0022,\r\n  \u0022PlanName\u0022: \u0022sample-PlanName\u0022,\r\n  \u0022IntervalHours\u0022: 1,\r\n  \u0022IntervalDays\u0022: 1,\r\n  \u0022EstimatedDurationHours\u0022: 1,\r\n  \u0022IsActive\u0022: true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "MaintenancePlan - Get by id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/maintenancePlans/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "maintenancePlans",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "MaintenancePlan - Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/maintenancePlans/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "maintenancePlans",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022EquipmentClassId\u0022: 1,\r\n  \u0022PlanCode\u0022: \u0022sample-PlanCode\u0022,\r\n  \u0022PlanName\u0022: \u0022sample-PlanName\u0022,\r\n  \u0022IntervalHours\u0022: 1,\r\n  \u0022IntervalDays\u0022: 1,\r\n  \u0022EstimatedDurationHours\u0022: 1,\r\n  \u0022IsActive\u0022: true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "MaintenancePlan - Patch",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/maintenancePlans/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "maintenancePlans",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022EquipmentClassId\u0022: 1,\r\n  \u0022PlanCode\u0022: \u0022sample-PlanCode\u0022,\r\n  \u0022PlanName\u0022: \u0022sample-PlanName\u0022,\r\n  \u0022IntervalHours\u0022: 1,\r\n  \u0022IntervalDays\u0022: 1,\r\n  \u0022EstimatedDurationHours\u0022: 1,\r\n  \u0022IsActive\u0022: true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "MaintenancePlan - Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/maintenancePlans/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "maintenancePlans",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Material",
+      "item": [
+        {
+          "name": "Material - Get all",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/materials?page=1\u0026pageSize=25",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "materials?page=1\u0026pageSize=25"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Material - Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/materials",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "materials"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022MaterialCode\u0022: \u0022sample-MaterialCode\u0022,\r\n  \u0022MaterialName\u0022: \u0022sample-MaterialName\u0022,\r\n  \u0022DensityTonnesPerM3\u0022: 1,\r\n  \u0022IsOre\u0022: true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Material - Get by id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/materials/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "materials",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Material - Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/materials/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "materials",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022MaterialCode\u0022: \u0022sample-MaterialCode\u0022,\r\n  \u0022MaterialName\u0022: \u0022sample-MaterialName\u0022,\r\n  \u0022DensityTonnesPerM3\u0022: 1,\r\n  \u0022IsOre\u0022: true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Material - Patch",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/materials/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "materials",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022MaterialCode\u0022: \u0022sample-MaterialCode\u0022,\r\n  \u0022MaterialName\u0022: \u0022sample-MaterialName\u0022,\r\n  \u0022DensityTonnesPerM3\u0022: 1,\r\n  \u0022IsOre\u0022: true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Material - Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/materials/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "materials",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "MeterReading",
+      "item": [
+        {
+          "name": "MeterReading - Get all",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/meterReadings?page=1\u0026pageSize=25",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "meterReadings?page=1\u0026pageSize=25"
+              ]
+            }
+          }
+        },
+        {
+          "name": "MeterReading - Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/meterReadings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "meterReadings"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022EquipmentId\u0022: 1,\r\n  \u0022ReadingAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022HourMeter\u0022: 1,\r\n  \u0022OdometerKm\u0022: 1,\r\n  \u0022SourceName\u0022: \u0022sample-SourceName\u0022,\r\n  \u0022RecordedByEmployeeId\u0022: 1,\r\n  \u0022Notes\u0022: \u0022sample-Notes\u0022,\r\n  \u0022CreatedAt\u0022: \u00222026-01-01T00:00:00Z\u0022\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "MeterReading - Get by id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/meterReadings/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "meterReadings",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "MeterReading - Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/meterReadings/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "meterReadings",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022EquipmentId\u0022: 1,\r\n  \u0022ReadingAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022HourMeter\u0022: 1,\r\n  \u0022OdometerKm\u0022: 1,\r\n  \u0022SourceName\u0022: \u0022sample-SourceName\u0022,\r\n  \u0022RecordedByEmployeeId\u0022: 1,\r\n  \u0022Notes\u0022: \u0022sample-Notes\u0022,\r\n  \u0022CreatedAt\u0022: \u00222026-01-01T00:00:00Z\u0022\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "MeterReading - Patch",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/meterReadings/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "meterReadings",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022EquipmentId\u0022: 1,\r\n  \u0022ReadingAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022HourMeter\u0022: 1,\r\n  \u0022OdometerKm\u0022: 1,\r\n  \u0022SourceName\u0022: \u0022sample-SourceName\u0022,\r\n  \u0022RecordedByEmployeeId\u0022: 1,\r\n  \u0022Notes\u0022: \u0022sample-Notes\u0022,\r\n  \u0022CreatedAt\u0022: \u00222026-01-01T00:00:00Z\u0022\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "MeterReading - Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/meterReadings/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "meterReadings",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Part",
+      "item": [
+        {
+          "name": "Part - Get all",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/parts?page=1\u0026pageSize=25",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "parts?page=1\u0026pageSize=25"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Part - Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/parts",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "parts"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022PartNumber\u0022: \u0022sample-PartNumber\u0022,\r\n  \u0022PartName\u0022: \u0022sample-PartName\u0022,\r\n  \u0022PartCategory\u0022: \u0022sample-PartCategory\u0022,\r\n  \u0022UnitOfMeasure\u0022: \u0022sample-UnitOfMeasure\u0022,\r\n  \u0022StandardCost\u0022: 1,\r\n  \u0022ReorderPoint\u0022: 1,\r\n  \u0022OnHandQuantity\u0022: 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Part - Get by id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/parts/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "parts",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Part - Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/parts/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "parts",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022PartNumber\u0022: \u0022sample-PartNumber\u0022,\r\n  \u0022PartName\u0022: \u0022sample-PartName\u0022,\r\n  \u0022PartCategory\u0022: \u0022sample-PartCategory\u0022,\r\n  \u0022UnitOfMeasure\u0022: \u0022sample-UnitOfMeasure\u0022,\r\n  \u0022StandardCost\u0022: 1,\r\n  \u0022ReorderPoint\u0022: 1,\r\n  \u0022OnHandQuantity\u0022: 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Part - Patch",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/parts/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "parts",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022PartNumber\u0022: \u0022sample-PartNumber\u0022,\r\n  \u0022PartName\u0022: \u0022sample-PartName\u0022,\r\n  \u0022PartCategory\u0022: \u0022sample-PartCategory\u0022,\r\n  \u0022UnitOfMeasure\u0022: \u0022sample-UnitOfMeasure\u0022,\r\n  \u0022StandardCost\u0022: 1,\r\n  \u0022ReorderPoint\u0022: 1,\r\n  \u0022OnHandQuantity\u0022: 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Part - Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/parts/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "parts",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Pit",
+      "item": [
+        {
+          "name": "Pit - Get all",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/pits?page=1\u0026pageSize=25",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pits?page=1\u0026pageSize=25"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Pit - Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/pits",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pits"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022SiteId\u0022: 1,\r\n  \u0022PitCode\u0022: \u0022sample-PitCode\u0022,\r\n  \u0022PitName\u0022: \u0022sample-PitName\u0022,\r\n  \u0022BenchElevationM\u0022: 1,\r\n  \u0022IsActive\u0022: true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Pit - Get by id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/pits/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pits",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Pit - Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/pits/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pits",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022SiteId\u0022: 1,\r\n  \u0022PitCode\u0022: \u0022sample-PitCode\u0022,\r\n  \u0022PitName\u0022: \u0022sample-PitName\u0022,\r\n  \u0022BenchElevationM\u0022: 1,\r\n  \u0022IsActive\u0022: true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Pit - Patch",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/pits/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pits",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022SiteId\u0022: 1,\r\n  \u0022PitCode\u0022: \u0022sample-PitCode\u0022,\r\n  \u0022PitName\u0022: \u0022sample-PitName\u0022,\r\n  \u0022BenchElevationM\u0022: 1,\r\n  \u0022IsActive\u0022: true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Pit - Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/pits/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pits",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Shift",
+      "item": [
+        {
+          "name": "Shift - Get all",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/shifts?page=1\u0026pageSize=25",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "shifts?page=1\u0026pageSize=25"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Shift - Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/shifts",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "shifts"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022SiteId\u0022: 1,\r\n  \u0022ShiftCode\u0022: \u0022sample-ShiftCode\u0022,\r\n  \u0022ShiftName\u0022: \u0022sample-ShiftName\u0022,\r\n  \u0022StartTime\u0022: \u0022\u0022,\r\n  \u0022EndTime\u0022: \u0022\u0022,\r\n  \u0022PlannedHours\u0022: 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Shift - Get by id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/shifts/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "shifts",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Shift - Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/shifts/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "shifts",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022SiteId\u0022: 1,\r\n  \u0022ShiftCode\u0022: \u0022sample-ShiftCode\u0022,\r\n  \u0022ShiftName\u0022: \u0022sample-ShiftName\u0022,\r\n  \u0022StartTime\u0022: \u0022\u0022,\r\n  \u0022EndTime\u0022: \u0022\u0022,\r\n  \u0022PlannedHours\u0022: 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Shift - Patch",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/shifts/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "shifts",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022SiteId\u0022: 1,\r\n  \u0022ShiftCode\u0022: \u0022sample-ShiftCode\u0022,\r\n  \u0022ShiftName\u0022: \u0022sample-ShiftName\u0022,\r\n  \u0022StartTime\u0022: \u0022\u0022,\r\n  \u0022EndTime\u0022: \u0022\u0022,\r\n  \u0022PlannedHours\u0022: 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Shift - Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/shifts/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "shifts",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Site",
+      "item": [
+        {
+          "name": "Site - Get all",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/sites?page=1\u0026pageSize=25",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "sites?page=1\u0026pageSize=25"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Site - Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/sites",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "sites"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022SiteCode\u0022: \u0022sample-SiteCode\u0022,\r\n  \u0022SiteName\u0022: \u0022sample-SiteName\u0022,\r\n  \u0022Country\u0022: \u0022sample-Country\u0022,\r\n  \u0022Region\u0022: \u0022sample-Region\u0022,\r\n  \u0022TimeZoneName\u0022: \u0022sample-TimeZoneName\u0022,\r\n  \u0022IsActive\u0022: true,\r\n  \u0022CreatedAt\u0022: \u00222026-01-01T00:00:00Z\u0022\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Site - Get by id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/sites/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "sites",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Site - Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/sites/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "sites",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022SiteCode\u0022: \u0022sample-SiteCode\u0022,\r\n  \u0022SiteName\u0022: \u0022sample-SiteName\u0022,\r\n  \u0022Country\u0022: \u0022sample-Country\u0022,\r\n  \u0022Region\u0022: \u0022sample-Region\u0022,\r\n  \u0022TimeZoneName\u0022: \u0022sample-TimeZoneName\u0022,\r\n  \u0022IsActive\u0022: true,\r\n  \u0022CreatedAt\u0022: \u00222026-01-01T00:00:00Z\u0022\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Site - Patch",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/sites/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "sites",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022SiteCode\u0022: \u0022sample-SiteCode\u0022,\r\n  \u0022SiteName\u0022: \u0022sample-SiteName\u0022,\r\n  \u0022Country\u0022: \u0022sample-Country\u0022,\r\n  \u0022Region\u0022: \u0022sample-Region\u0022,\r\n  \u0022TimeZoneName\u0022: \u0022sample-TimeZoneName\u0022,\r\n  \u0022IsActive\u0022: true,\r\n  \u0022CreatedAt\u0022: \u00222026-01-01T00:00:00Z\u0022\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Site - Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/sites/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "sites",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "TireInspection",
+      "item": [
+        {
+          "name": "TireInspection - Get all",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/tireInspections?page=1\u0026pageSize=25",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tireInspections?page=1\u0026pageSize=25"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TireInspection - Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/tireInspections",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tireInspections"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022TireInstallationId\u0022: 1,\r\n  \u0022InspectedAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022HourMeter\u0022: 1,\r\n  \u0022TreadDepthMm\u0022: 1,\r\n  \u0022PressureKpa\u0022: 1,\r\n  \u0022TemperatureC\u0022: 1,\r\n  \u0022ConditionRating\u0022: \u0022sample-ConditionRating\u0022,\r\n  \u0022Notes\u0022: \u0022sample-Notes\u0022\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "TireInspection - Get by id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/tireInspections/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tireInspections",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TireInspection - Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/tireInspections/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tireInspections",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022TireInstallationId\u0022: 1,\r\n  \u0022InspectedAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022HourMeter\u0022: 1,\r\n  \u0022TreadDepthMm\u0022: 1,\r\n  \u0022PressureKpa\u0022: 1,\r\n  \u0022TemperatureC\u0022: 1,\r\n  \u0022ConditionRating\u0022: \u0022sample-ConditionRating\u0022,\r\n  \u0022Notes\u0022: \u0022sample-Notes\u0022\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "TireInspection - Patch",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/tireInspections/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tireInspections",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022TireInstallationId\u0022: 1,\r\n  \u0022InspectedAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022HourMeter\u0022: 1,\r\n  \u0022TreadDepthMm\u0022: 1,\r\n  \u0022PressureKpa\u0022: 1,\r\n  \u0022TemperatureC\u0022: 1,\r\n  \u0022ConditionRating\u0022: \u0022sample-ConditionRating\u0022,\r\n  \u0022Notes\u0022: \u0022sample-Notes\u0022\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "TireInspection - Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/tireInspections/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tireInspections",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "TireInstallation",
+      "item": [
+        {
+          "name": "TireInstallation - Get all",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/tireInstallations?page=1\u0026pageSize=25",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tireInstallations?page=1\u0026pageSize=25"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TireInstallation - Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/tireInstallations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tireInstallations"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022TireId\u0022: 1,\r\n  \u0022EquipmentId\u0022: 1,\r\n  \u0022PositionCode\u0022: \u0022sample-PositionCode\u0022,\r\n  \u0022InstalledAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022RemovedAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022InstallHourMeter\u0022: 1,\r\n  \u0022RemoveHourMeter\u0022: 1,\r\n  \u0022RemovalReason\u0022: \u0022sample-RemovalReason\u0022\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "TireInstallation - Get by id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/tireInstallations/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tireInstallations",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TireInstallation - Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/tireInstallations/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tireInstallations",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022TireId\u0022: 1,\r\n  \u0022EquipmentId\u0022: 1,\r\n  \u0022PositionCode\u0022: \u0022sample-PositionCode\u0022,\r\n  \u0022InstalledAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022RemovedAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022InstallHourMeter\u0022: 1,\r\n  \u0022RemoveHourMeter\u0022: 1,\r\n  \u0022RemovalReason\u0022: \u0022sample-RemovalReason\u0022\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "TireInstallation - Patch",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/tireInstallations/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tireInstallations",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022TireId\u0022: 1,\r\n  \u0022EquipmentId\u0022: 1,\r\n  \u0022PositionCode\u0022: \u0022sample-PositionCode\u0022,\r\n  \u0022InstalledAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022RemovedAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022InstallHourMeter\u0022: 1,\r\n  \u0022RemoveHourMeter\u0022: 1,\r\n  \u0022RemovalReason\u0022: \u0022sample-RemovalReason\u0022\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "TireInstallation - Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/tireInstallations/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tireInstallations",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "TireInventory",
+      "item": [
+        {
+          "name": "TireInventory - Get all",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/tireInventories?page=1\u0026pageSize=25",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tireInventories?page=1\u0026pageSize=25"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TireInventory - Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/tireInventories",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tireInventories"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022TireSerialNumber\u0022: \u0022sample-TireSerialNumber\u0022,\r\n  \u0022Manufacturer\u0022: \u0022sample-Manufacturer\u0022,\r\n  \u0022TireSize\u0022: \u0022sample-TireSize\u0022,\r\n  \u0022TireType\u0022: \u0022sample-TireType\u0022,\r\n  \u0022PurchaseDate\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022PurchaseCost\u0022: 1,\r\n  \u0022OriginalTreadDepthMm\u0022: 1,\r\n  \u0022Status\u0022: \u0022sample-Status\u0022,\r\n  \u0022CreatedAt\u0022: \u00222026-01-01T00:00:00Z\u0022\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "TireInventory - Get by id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/tireInventories/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tireInventories",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TireInventory - Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/tireInventories/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tireInventories",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022TireSerialNumber\u0022: \u0022sample-TireSerialNumber\u0022,\r\n  \u0022Manufacturer\u0022: \u0022sample-Manufacturer\u0022,\r\n  \u0022TireSize\u0022: \u0022sample-TireSize\u0022,\r\n  \u0022TireType\u0022: \u0022sample-TireType\u0022,\r\n  \u0022PurchaseDate\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022PurchaseCost\u0022: 1,\r\n  \u0022OriginalTreadDepthMm\u0022: 1,\r\n  \u0022Status\u0022: \u0022sample-Status\u0022,\r\n  \u0022CreatedAt\u0022: \u00222026-01-01T00:00:00Z\u0022\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "TireInventory - Patch",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/tireInventories/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tireInventories",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022TireSerialNumber\u0022: \u0022sample-TireSerialNumber\u0022,\r\n  \u0022Manufacturer\u0022: \u0022sample-Manufacturer\u0022,\r\n  \u0022TireSize\u0022: \u0022sample-TireSize\u0022,\r\n  \u0022TireType\u0022: \u0022sample-TireType\u0022,\r\n  \u0022PurchaseDate\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022PurchaseCost\u0022: 1,\r\n  \u0022OriginalTreadDepthMm\u0022: 1,\r\n  \u0022Status\u0022: \u0022sample-Status\u0022,\r\n  \u0022CreatedAt\u0022: \u00222026-01-01T00:00:00Z\u0022\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "TireInventory - Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/tireInventories/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tireInventories",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "WorkOrder",
+      "item": [
+        {
+          "name": "WorkOrder - Get all",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/workOrders?page=1\u0026pageSize=25",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "workOrders?page=1\u0026pageSize=25"
+              ]
+            }
+          }
+        },
+        {
+          "name": "WorkOrder - Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/workOrders",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "workOrders"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022WorkOrderNumber\u0022: \u0022sample-WorkOrderNumber\u0022,\r\n  \u0022EquipmentId\u0022: 1,\r\n  \u0022MaintenancePlanId\u0022: 1,\r\n  \u0022OpenedAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022ClosedAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022PriorityName\u0022: \u0022sample-PriorityName\u0022,\r\n  \u0022WorkOrderType\u0022: \u0022sample-WorkOrderType\u0022,\r\n  \u0022Status\u0022: \u0022sample-Status\u0022,\r\n  \u0022OpenHourMeter\u0022: 1,\r\n  \u0022CloseHourMeter\u0022: 1,\r\n  \u0022ProblemDescription\u0022: \u0022sample-ProblemDescription\u0022,\r\n  \u0022CorrectiveAction\u0022: \u0022sample-CorrectiveAction\u0022,\r\n  \u0022LaborHours\u0022: 1,\r\n  \u0022EstimatedCost\u0022: 1,\r\n  \u0022ActualCost\u0022: 1,\r\n  \u0022CreatedByEmployeeId\u0022: 1,\r\n  \u0022ClosedByEmployeeId\u0022: 1,\r\n  \u0022DowntimeHours\u0022: 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "WorkOrder - Get by id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/workOrders/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "workOrders",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "WorkOrder - Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/workOrders/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "workOrders",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022WorkOrderNumber\u0022: \u0022sample-WorkOrderNumber\u0022,\r\n  \u0022EquipmentId\u0022: 1,\r\n  \u0022MaintenancePlanId\u0022: 1,\r\n  \u0022OpenedAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022ClosedAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022PriorityName\u0022: \u0022sample-PriorityName\u0022,\r\n  \u0022WorkOrderType\u0022: \u0022sample-WorkOrderType\u0022,\r\n  \u0022Status\u0022: \u0022sample-Status\u0022,\r\n  \u0022OpenHourMeter\u0022: 1,\r\n  \u0022CloseHourMeter\u0022: 1,\r\n  \u0022ProblemDescription\u0022: \u0022sample-ProblemDescription\u0022,\r\n  \u0022CorrectiveAction\u0022: \u0022sample-CorrectiveAction\u0022,\r\n  \u0022LaborHours\u0022: 1,\r\n  \u0022EstimatedCost\u0022: 1,\r\n  \u0022ActualCost\u0022: 1,\r\n  \u0022CreatedByEmployeeId\u0022: 1,\r\n  \u0022ClosedByEmployeeId\u0022: 1,\r\n  \u0022DowntimeHours\u0022: 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "WorkOrder - Patch",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/workOrders/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "workOrders",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022WorkOrderNumber\u0022: \u0022sample-WorkOrderNumber\u0022,\r\n  \u0022EquipmentId\u0022: 1,\r\n  \u0022MaintenancePlanId\u0022: 1,\r\n  \u0022OpenedAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022ClosedAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022PriorityName\u0022: \u0022sample-PriorityName\u0022,\r\n  \u0022WorkOrderType\u0022: \u0022sample-WorkOrderType\u0022,\r\n  \u0022Status\u0022: \u0022sample-Status\u0022,\r\n  \u0022OpenHourMeter\u0022: 1,\r\n  \u0022CloseHourMeter\u0022: 1,\r\n  \u0022ProblemDescription\u0022: \u0022sample-ProblemDescription\u0022,\r\n  \u0022CorrectiveAction\u0022: \u0022sample-CorrectiveAction\u0022,\r\n  \u0022LaborHours\u0022: 1,\r\n  \u0022EstimatedCost\u0022: 1,\r\n  \u0022ActualCost\u0022: 1,\r\n  \u0022CreatedByEmployeeId\u0022: 1,\r\n  \u0022ClosedByEmployeeId\u0022: 1,\r\n  \u0022DowntimeHours\u0022: 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "WorkOrder - Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/workOrders/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "workOrders",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "WorkOrderPart",
+      "item": [
+        {
+          "name": "WorkOrderPart - Get all",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/workOrderParts?page=1\u0026pageSize=25",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "workOrderParts?page=1\u0026pageSize=25"
+              ]
+            }
+          }
+        },
+        {
+          "name": "WorkOrderPart - Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/workOrderParts",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "workOrderParts"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022WorkOrderId\u0022: 1,\r\n  \u0022PartId\u0022: 1,\r\n  \u0022QuantityUsed\u0022: 1,\r\n  \u0022UnitCost\u0022: 1,\r\n  \u0022LineCost\u0022: 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "WorkOrderPart - Get by id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/workOrderParts/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "workOrderParts",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "WorkOrderPart - Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/workOrderParts/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "workOrderParts",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022WorkOrderId\u0022: 1,\r\n  \u0022PartId\u0022: 1,\r\n  \u0022QuantityUsed\u0022: 1,\r\n  \u0022UnitCost\u0022: 1,\r\n  \u0022LineCost\u0022: 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "WorkOrderPart - Patch",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/workOrderParts/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "workOrderParts",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022WorkOrderId\u0022: 1,\r\n  \u0022PartId\u0022: 1,\r\n  \u0022QuantityUsed\u0022: 1,\r\n  \u0022UnitCost\u0022: 1,\r\n  \u0022LineCost\u0022: 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "WorkOrderPart - Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/workOrderParts/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "workOrderParts",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "WorkOrderTask",
+      "item": [
+        {
+          "name": "WorkOrderTask - Get all",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/workOrderTasks?page=1\u0026pageSize=25",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "workOrderTasks?page=1\u0026pageSize=25"
+              ]
+            }
+          }
+        },
+        {
+          "name": "WorkOrderTask - Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/workOrderTasks",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "workOrderTasks"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022WorkOrderId\u0022: 1,\r\n  \u0022TaskSequence\u0022: 1,\r\n  \u0022TaskDescription\u0022: \u0022sample-TaskDescription\u0022,\r\n  \u0022IsCompleted\u0022: true,\r\n  \u0022CompletedAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022CompletedByEmployeeId\u0022: 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "WorkOrderTask - Get by id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/workOrderTasks/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "workOrderTasks",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "WorkOrderTask - Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/workOrderTasks/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "workOrderTasks",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022WorkOrderId\u0022: 1,\r\n  \u0022TaskSequence\u0022: 1,\r\n  \u0022TaskDescription\u0022: \u0022sample-TaskDescription\u0022,\r\n  \u0022IsCompleted\u0022: true,\r\n  \u0022CompletedAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022CompletedByEmployeeId\u0022: 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "WorkOrderTask - Patch",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/workOrderTasks/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "workOrderTasks",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \u0022WorkOrderId\u0022: 1,\r\n  \u0022TaskSequence\u0022: 1,\r\n  \u0022TaskDescription\u0022: \u0022sample-TaskDescription\u0022,\r\n  \u0022IsCompleted\u0022: true,\r\n  \u0022CompletedAt\u0022: \u00222026-01-01T00:00:00Z\u0022,\r\n  \u0022CompletedByEmployeeId\u0022: 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "WorkOrderTask - Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/workOrderTasks/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "workOrderTasks",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

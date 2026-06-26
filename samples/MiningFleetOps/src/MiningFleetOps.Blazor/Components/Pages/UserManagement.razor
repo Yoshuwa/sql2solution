@@ -1,0 +1,692 @@
+﻿@page "/users"
+@inject ApiSession Session
+@inject Microsoft.JSInterop.IJSRuntime Js
+
+<section class="panel">
+    <div class="panel-heading">
+        <div>
+            <h1>Users & roles</h1>
+            <p>Review access, assign roles, manage direct permissions, and inspect generated authorization data.</p>
+        </div>
+        <div class="command-stack">
+            <button type="button" class="button-secondary" @onclick="LoadAsync" disabled="@IsBusy">Refresh</button>
+            <button type="button" @onclick="ApplySelectedUserAsync" disabled="@(IsBusy || SelectedUser is null)">Save user access</button>
+        </div>
+    </div>
+    @if (!string.IsNullOrWhiteSpace(StatusMessage))
+    {
+        <p class="status">@StatusMessage</p>
+    }
+</section>
+
+<div class="metric-grid">
+    <div class="metric"><span>Users</span><strong>@UserRows.Count</strong></div>
+    <div class="metric"><span>Roles</span><strong>@RoleRows.Count</strong></div>
+    <div class="metric"><span>Permissions</span><strong>@PermissionRows.Count</strong></div>
+    <div class="metric"><span>Direct grants</span><strong>@UserRows.Sum(user => user.DirectPermissions.Count)</strong></div>
+</div>
+
+<div class="split">
+    <section class="panel">
+        <div class="section-title">
+            <h2>Directory</h2>
+            <span class="metadata-pill">@FilteredUsers.Count user(s)</span>
+        </div>
+        <div class="query-toolbar" style="grid-template-columns: minmax(220px, 1fr) minmax(160px, .5fr) auto;">
+            <label>
+                <span>Search users</span>
+                <input @bind="UserSearch" @bind:event="oninput" placeholder="Name, id, tenant, or role..." />
+            </label>
+            <label>
+                <span>Tenant</span>
+                <select @bind="TenantFilter">
+                    <option value="">All tenants</option>
+                    @foreach (var tenant in TenantOptions)
+                    {
+                        <option value="@tenant">@tenant</option>
+                    }
+                </select>
+            </label>
+            <button type="button" class="button-secondary" @onclick="ClearFilters">Clear</button>
+        </div>
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Tenant</th>
+                        <th>Roles</th>
+                        <th>Direct permissions</th>
+                        <th>Command</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in FilteredUsers)
+                    {
+                        <tr>
+                            <td>
+                                <strong>@user.UserName</strong><br />
+                                <span class="metadata-pill">@ShortId(user.Id)</span>
+                            </td>
+                            <td>@DisplayTenant(user)</td>
+                            <td>@JoinOrDash(user.Roles)</td>
+                            <td>@JoinOrDash(user.DirectPermissions)</td>
+                            <td>
+                                <div class="command-stack">
+                                    <button type="button" class="button-secondary compact-button" @onclick="() => SelectUser(user)"><i class="fa-solid fa-pen-to-square"></i><span>Manage</span></button>
+                                    @if (Session.HasRole("MasterAdmin") && !string.Equals(user.Id, Session.UserId, StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        <button type="button" class="button-secondary compact-button" @onclick="() => ImpersonateUserAsync(user)" disabled="@IsBusy"><i class="fa-solid fa-user-secret"></i><span>Impersonate</span></button>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="panel">
+        <div class="section-title">
+            <h2>User access</h2>
+            @if (SelectedUser is not null)
+            {
+                <span class="metadata-pill">@SelectedUser.UserName</span>
+            }
+        </div>
+        @if (SelectedUser is null)
+        {
+            <p>Select a user to review role membership and direct permissions.</p>
+        }
+        else
+        {
+            <div class="fields">
+                <label><span>User id</span><input readonly value="@SelectedUser.Id" /></label>
+                <label><span>User name</span><input readonly value="@SelectedUser.UserName" /></label>
+                <label><span>Tenant</span><input readonly value="@DisplayTenant(SelectedUser)" /></label>
+            </div>
+
+            <h2>Roles</h2>
+            <div class="access-picker">
+                <div class="access-list">
+                    <label><span>Available roles</span><input @bind="RolePickerSearch" @bind:event="oninput" placeholder="Filter roles..." /></label>
+                    <select multiple @onchange="args => PendingRoleAdds = SelectedValues(args)">
+                        @foreach (var role in AvailableRolesForSelectedUser)
+                        {
+                            <option value="@role">@role</option>
+                        }
+                    </select>
+                </div>
+                <div class="access-actions">
+                    <button type="button" class="button-secondary compact-button" @onclick="AddPendingRoles">Add</button>
+                    <button type="button" class="button-secondary compact-button" @onclick="RemovePendingRoles">Remove</button>
+                </div>
+                <div class="access-list">
+                    <label><span>Granted roles</span><input value="@SelectedRoles.Count role(s)" readonly /></label>
+                    <select multiple @onchange="args => PendingRoleRemoves = SelectedValues(args)">
+                        @foreach (var role in SelectedRoles.OrderBy(value => value))
+                        {
+                            <option value="@role">@role</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <h2>Direct permissions</h2>
+            <div class="access-picker">
+                <div class="access-list">
+                    <label><span>Available permissions</span><input @bind="UserPermissionPickerSearch" @bind:event="oninput" placeholder="Filter by resource or action..." /></label>
+                    <select multiple @onchange="args => PendingUserPermissionAdds = SelectedValues(args)">
+                        @foreach (var permission in AvailablePermissionsForSelectedUser)
+                        {
+                            <option value="@permission">@permission</option>
+                        }
+                    </select>
+                </div>
+                <div class="access-actions">
+                    <button type="button" class="button-secondary compact-button" @onclick="AddPendingUserPermissions">Add</button>
+                    <button type="button" class="button-secondary compact-button" @onclick="RemovePendingUserPermissions">Remove</button>
+                </div>
+                <div class="access-list">
+                    <label><span>Direct grants</span><input value="@SelectedPermissions.Count permission(s)" readonly /></label>
+                    <select multiple @onchange="args => PendingUserPermissionRemoves = SelectedValues(args)">
+                        @foreach (var permission in SelectedPermissions.OrderBy(value => value))
+                        {
+                            <option value="@permission">@permission</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="access-summary">
+                @foreach (var permission in SelectedPermissions.Take(12).OrderBy(value => value))
+                {
+                    <span title="@permission">@permission</span>
+                }
+                @if (SelectedPermissions.Count > 12)
+                {
+                    <span>+@(SelectedPermissions.Count - 12) more</span>
+                }
+            </div>
+
+            <div class="command-stack">
+                <button type="button" @onclick="ApplySelectedUserAsync" disabled="@IsBusy">Save roles and permissions</button>
+                <button type="button" class="button-secondary" @onclick="ResetSelectedUserAccess" disabled="@IsBusy">Reset changes</button>
+            </div>
+        }
+    </section>
+</div>
+
+<div class="form-grid">
+    <section class="panel">
+        <h2>Create user</h2>
+        <div class="fields">
+            <label><span>User name</span><input @bind="UserName" placeholder="admin@example.com" /></label>
+            <label><span>Password</span><input type="password" @bind="Password" /></label>
+            <label><span>Tenant id</span><input @bind="TenantId" placeholder="Optional tenant id" /></label>
+            <label>
+                <span>Initial role</span>
+                <select @bind="Role">
+                    <option value="">No role</option>
+                    @foreach (var role in RoleRows)
+                    {
+                        <option value="@role.Name">@role.Name</option>
+                    }
+                </select>
+            </label>
+            <button type="button" @onclick="CreateUserAsync" disabled="@IsBusy">Create user</button>
+        </div>
+    </section>
+
+    <section class="panel">
+        <h2>Roles and permissions</h2>
+        <div class="fields">
+            <label><span>Role name</span><input @bind="RoleName" placeholder="OperationsManager" /></label>
+            <button type="button" @onclick="CreateRoleAsync" disabled="@IsBusy">Create role</button>
+            <label><span>Permission name</span><input @bind="PermissionName" placeholder="Customer:approve" /></label>
+            <button type="button" @onclick="CreatePermissionAsync" disabled="@IsBusy">Create permission</button>
+        </div>
+    </section>
+</div>
+
+<section class="panel">
+    <div class="section-title">
+        <h2>Role permissions</h2>
+        <span class="metadata-pill">@RoleRows.Count role(s)</span>
+    </div>
+    <div class="split">
+        <div>
+            <label><span>Search roles</span><input @bind="RoleSearch" @bind:event="oninput" placeholder="Role name or permission..." /></label>
+            <div class="table-wrap">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Role</th>
+                            <th>Permissions</th>
+                            <th>Command</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var role in FilteredRoles)
+                        {
+                            <tr>
+                                <td><strong>@role.Name</strong><br /><span class="metadata-pill">@ShortId(role.Id)</span></td>
+                                <td>@JoinOrDash(role.Permissions)</td>
+                                <td><button type="button" class="button-secondary compact-button" @onclick="() => SelectRole(role)">Manage</button></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div>
+            @if (SelectedRole is null)
+            {
+                <p>Select a role to edit its permission set.</p>
+            }
+            else
+            {
+                <h2>@SelectedRole.Name</h2>
+                <p>@SelectedRolePermissions.Count permission(s) selected.</p>
+                <div class="access-picker">
+                    <div class="access-list">
+                        <label><span>Available permissions</span><input @bind="RolePermissionPickerSearch" @bind:event="oninput" placeholder="Filter by resource or action..." /></label>
+                        <select multiple @onchange="args => PendingRolePermissionAdds = SelectedValues(args)">
+                            @foreach (var permission in AvailablePermissionsForSelectedRole)
+                            {
+                                <option value="@permission">@permission</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="access-actions">
+                        <button type="button" class="button-secondary compact-button" @onclick="AddPendingRolePermissions">Add</button>
+                        <button type="button" class="button-secondary compact-button" @onclick="RemovePendingRolePermissions">Remove</button>
+                    </div>
+                    <div class="access-list">
+                        <label><span>Granted permissions</span><input value="@SelectedRolePermissions.Count permission(s)" readonly /></label>
+                        <select multiple @onchange="args => PendingRolePermissionRemoves = SelectedValues(args)">
+                            @foreach (var permission in SelectedRolePermissions.OrderBy(value => value))
+                            {
+                                <option value="@permission">@permission</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="command-stack">
+                    <button type="button" @onclick="ApplySelectedRoleAsync" disabled="@IsBusy">Save role permissions</button>
+                    <button type="button" class="button-secondary" @onclick="ResetSelectedRolePermissions" disabled="@IsBusy">Reset changes</button>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<section class="panel">
+    <div class="section-title">
+        <h2>Permission catalog</h2>
+        <span class="metadata-pill">@PermissionRows.Count permission(s)</span>
+    </div>
+    <label><span>Search permissions</span><input @bind="PermissionSearch" @bind:event="oninput" placeholder="Resource or action..." /></label>
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Permission</th>
+                    <th>Used by roles</th>
+                    <th>Direct users</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var permission in FilteredPermissions)
+                {
+                    <tr>
+                        <td><strong>@permission.Name</strong><br /><span class="metadata-pill">@PermissionGroup(permission.Name)</span></td>
+                        <td>@JoinOrDash(RoleRows.Where(role => role.Permissions.Contains(permission.Name, StringComparer.OrdinalIgnoreCase)).Select(role => role.Name))</td>
+                        <td>@JoinOrDash(UserRows.Where(user => user.DirectPermissions.Contains(permission.Name, StringComparer.OrdinalIgnoreCase)).Select(user => user.UserName))</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<details class="panel">
+    <summary>Diagnostics and raw API responses</summary>
+    <div class="form-grid">
+        <section>
+            <h2>Users</h2>
+            <pre>@UsersJson</pre>
+        </section>
+        <section>
+            <h2>Roles</h2>
+            <pre>@RolesJson</pre>
+        </section>
+        <section>
+            <h2>Permissions</h2>
+            <pre>@PermissionsJson</pre>
+        </section>
+        <section>
+            <h2>Last response</h2>
+            <pre>@ResponseBody</pre>
+        </section>
+    </div>
+</details>
+
+@code {
+    private string UserName { get; set; } = "";
+    private string Password { get; set; } = "";
+    private string TenantId { get; set; } = "";
+    private string Role { get; set; } = "User";
+    private string RoleName { get; set; } = "";
+    private string PermissionName { get; set; } = "";
+    private string UsersJson { get; set; } = "";
+    private string RolesJson { get; set; } = "";
+    private string PermissionsJson { get; set; } = "";
+    private string StatusMessage { get; set; } = "";
+    private string ResponseBody { get; set; } = "";
+    private string UserSearch { get; set; } = "";
+    private string RoleSearch { get; set; } = "";
+    private string PermissionSearch { get; set; } = "";
+    private string TenantFilter { get; set; } = "";
+    private string RolePickerSearch { get; set; } = "";
+    private string UserPermissionPickerSearch { get; set; } = "";
+    private string RolePermissionPickerSearch { get; set; } = "";
+    private string SelectedUserId { get; set; } = "";
+    private string SelectedRoleId { get; set; } = "";
+    private bool IsBusy { get; set; }
+    private string[] PendingRoleAdds { get; set; } = Array.Empty<string>();
+    private string[] PendingRoleRemoves { get; set; } = Array.Empty<string>();
+    private string[] PendingUserPermissionAdds { get; set; } = Array.Empty<string>();
+    private string[] PendingUserPermissionRemoves { get; set; } = Array.Empty<string>();
+    private string[] PendingRolePermissionAdds { get; set; } = Array.Empty<string>();
+    private string[] PendingRolePermissionRemoves { get; set; } = Array.Empty<string>();
+    private List<UserAdminRow> UserRows { get; set; } = new();
+    private List<RoleAdminRow> RoleRows { get; set; } = new();
+    private List<PermissionAdminRow> PermissionRows { get; set; } = new();
+    private HashSet<string> SelectedRoles { get; } = new(StringComparer.OrdinalIgnoreCase);
+    private HashSet<string> SelectedPermissions { get; } = new(StringComparer.OrdinalIgnoreCase);
+    private HashSet<string> SelectedRolePermissions { get; } = new(StringComparer.OrdinalIgnoreCase);
+
+    private UserAdminRow? SelectedUser => UserRows.FirstOrDefault(user => user.Id == SelectedUserId);
+    private RoleAdminRow? SelectedRole => RoleRows.FirstOrDefault(role => role.Id == SelectedRoleId || role.Name.Equals(SelectedRoleId, StringComparison.OrdinalIgnoreCase));
+    private IReadOnlyList<string> AvailableRolesForSelectedUser => RoleRows
+        .Select(role => role.Name)
+        .Where(role => !SelectedRoles.Contains(role))
+        .Where(role => Matches(RolePickerSearch, role))
+        .OrderBy(role => role)
+        .ToList();
+    private IReadOnlyList<string> AvailablePermissionsForSelectedUser => PermissionRows
+        .Select(permission => permission.Name)
+        .Where(permission => !SelectedPermissions.Contains(permission))
+        .Where(permission => Matches(UserPermissionPickerSearch, permission, PermissionGroup(permission)))
+        .OrderBy(permission => PermissionGroup(permission))
+        .ThenBy(permission => permission)
+        .ToList();
+    private IReadOnlyList<string> AvailablePermissionsForSelectedRole => PermissionRows
+        .Select(permission => permission.Name)
+        .Where(permission => !SelectedRolePermissions.Contains(permission))
+        .Where(permission => Matches(RolePermissionPickerSearch, permission, PermissionGroup(permission)))
+        .OrderBy(permission => PermissionGroup(permission))
+        .ThenBy(permission => permission)
+        .ToList();
+    private IReadOnlyList<string> TenantOptions => UserRows.Select(DisplayTenant).Where(value => value != "-").Distinct(StringComparer.OrdinalIgnoreCase).OrderBy(value => value).ToList();
+    private IReadOnlyList<UserAdminRow> FilteredUsers => UserRows
+        .Where(user => string.IsNullOrWhiteSpace(TenantFilter) || DisplayTenant(user).Equals(TenantFilter, StringComparison.OrdinalIgnoreCase))
+        .Where(user => Matches(UserSearch, user.Id, user.UserName, user.TenantId, user.TenantName, string.Join(' ', user.Roles), string.Join(' ', user.DirectPermissions)))
+        .OrderBy(user => user.UserName)
+        .ToList();
+    private IReadOnlyList<RoleAdminRow> FilteredRoles => RoleRows
+        .Where(role => Matches(RoleSearch, role.Id, role.Name, string.Join(' ', role.Permissions)))
+        .OrderBy(role => role.Name)
+        .ToList();
+    private IReadOnlyList<PermissionAdminRow> FilteredPermissions => PermissionRows
+        .Where(permission => Matches(PermissionSearch, permission.Id, permission.Name, PermissionGroup(permission.Name)))
+        .OrderBy(permission => PermissionGroup(permission.Name))
+        .ThenBy(permission => permission.Name)
+        .ToList();
+
+    protected override async Task OnInitializedAsync() => await LoadAsync();
+
+    private async Task LoadAsync()
+    {
+        IsBusy = true;
+        try
+        {
+            UsersJson = (await Session.SendAsync(HttpMethod.Get, "api/auth/users")).Body;
+            RolesJson = (await Session.SendAsync(HttpMethod.Get, "api/auth/roles")).Body;
+            PermissionsJson = (await Session.SendAsync(HttpMethod.Get, "api/auth/permissions")).Body;
+            UserRows = ParseUsers(UsersJson);
+            RoleRows = ParseRoles(RolesJson);
+            PermissionRows = ParsePermissions(PermissionsJson);
+            if (string.IsNullOrWhiteSpace(Role) && RoleRows.Count > 0)
+                Role = RoleRows[0].Name;
+            if (SelectedUser is null && UserRows.Count > 0)
+                SelectUser(UserRows[0]);
+            else
+                ResetSelectedUserAccess();
+            if (SelectedRole is null && RoleRows.Count > 0)
+                SelectRole(RoleRows[0]);
+            else
+                ResetSelectedRolePermissions();
+            StatusMessage = $"Loaded {UserRows.Count} users, {RoleRows.Count} roles, and {PermissionRows.Count} permissions.";
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    private async Task CreateUserAsync()
+    {
+        if (!await ConfirmAsync("Create this user?"))
+            return;
+        await SendAndReloadAsync(HttpMethod.Post, "api/auth/users", new { userName = UserName, password = Password, tenantId = string.IsNullOrWhiteSpace(TenantId) ? null : TenantId, role = string.IsNullOrWhiteSpace(Role) ? null : Role }, "User created.");
+        UserName = "";
+        Password = "";
+    }
+
+    private async Task CreateRoleAsync()
+    {
+        if (!await ConfirmAsync("Create this role?"))
+            return;
+        await SendAndReloadAsync(HttpMethod.Post, "api/auth/roles", new { name = RoleName }, "Role created.");
+        RoleName = "";
+    }
+
+    private async Task CreatePermissionAsync()
+    {
+        if (!await ConfirmAsync("Create this permission?"))
+            return;
+        await SendAndReloadAsync(HttpMethod.Post, "api/auth/permissions", new { name = PermissionName }, "Permission created.");
+        PermissionName = "";
+    }
+
+    private async Task ApplySelectedUserAsync()
+    {
+        if (SelectedUser is null || !await ConfirmAsync($"Update access for {SelectedUser.UserName}?"))
+            return;
+
+        IsBusy = true;
+        var rolesResult = await Session.SendAsync(HttpMethod.Post, $"api/auth/users/{Uri.EscapeDataString(SelectedUser.Id)}/roles", new { roles = SelectedRoles.OrderBy(value => value).ToArray() });
+        var permissionsResult = await Session.SendAsync(HttpMethod.Post, $"api/auth/users/{Uri.EscapeDataString(SelectedUser.Id)}/permissions", new { permissions = SelectedPermissions.OrderBy(value => value).ToArray() });
+        ResponseBody = rolesResult.Body + Environment.NewLine + permissionsResult.Body;
+        StatusMessage = rolesResult.Success && permissionsResult.Success ? "User access updated." : "One or more user access updates failed.";
+        IsBusy = false;
+        if (rolesResult.Success && permissionsResult.Success)
+            await LoadAsync();
+    }
+
+    private async Task ApplySelectedRoleAsync()
+    {
+        if (SelectedRole is null || !await ConfirmAsync($"Update permissions for role {SelectedRole.Name}?"))
+            return;
+
+        await SendAndReloadAsync(HttpMethod.Post, $"api/auth/roles/{Uri.EscapeDataString(SelectedRole.Id)}/permissions", new { permissions = SelectedRolePermissions.OrderBy(value => value).ToArray() }, "Role permissions updated.");
+    }
+
+    private async Task ImpersonateUserAsync(UserAdminRow user)
+    {
+        if (!Session.HasRole("MasterAdmin"))
+        {
+            StatusMessage = "Only MasterAdmin users can impersonate another user.";
+            return;
+        }
+        if (!await ConfirmAsync($"Impersonate {user.UserName}?"))
+            return;
+
+        IsBusy = true;
+        var result = await Session.ImpersonateAsync(user.Id);
+        ResponseBody = result.Body;
+        StatusMessage = result.Success ? $"Now impersonating {user.UserName}." : result.UserMessage;
+        IsBusy = false;
+    }
+
+    private async Task SendAndReloadAsync(HttpMethod method, string path, object body, string successMessage)
+    {
+        IsBusy = true;
+        var result = await Session.SendAsync(method, path, body);
+        ResponseBody = result.Body;
+        StatusMessage = result.Success ? successMessage : result.UserMessage;
+        IsBusy = false;
+        if (result.Success)
+            await LoadAsync();
+    }
+
+    private void SelectUser(UserAdminRow user)
+    {
+        SelectedUserId = user.Id;
+        ResetSelectedUserAccess();
+    }
+
+    private void ResetSelectedUserAccess()
+    {
+        SelectedRoles.Clear();
+        SelectedPermissions.Clear();
+        PendingRoleAdds = Array.Empty<string>();
+        PendingRoleRemoves = Array.Empty<string>();
+        PendingUserPermissionAdds = Array.Empty<string>();
+        PendingUserPermissionRemoves = Array.Empty<string>();
+        if (SelectedUser is null)
+            return;
+        foreach (var role in SelectedUser.Roles)
+            SelectedRoles.Add(role);
+        foreach (var permission in SelectedUser.DirectPermissions)
+            SelectedPermissions.Add(permission);
+    }
+
+    private void SelectRole(RoleAdminRow role)
+    {
+        SelectedRoleId = string.IsNullOrWhiteSpace(role.Id) ? role.Name : role.Id;
+        ResetSelectedRolePermissions();
+    }
+
+    private void ResetSelectedRolePermissions()
+    {
+        SelectedRolePermissions.Clear();
+        PendingRolePermissionAdds = Array.Empty<string>();
+        PendingRolePermissionRemoves = Array.Empty<string>();
+        if (SelectedRole is null)
+            return;
+        foreach (var permission in SelectedRole.Permissions)
+            SelectedRolePermissions.Add(permission);
+    }
+
+    private void ClearFilters()
+    {
+        UserSearch = "";
+        TenantFilter = "";
+    }
+
+    private void AddPendingRoles() => AddValues(SelectedRoles, PendingRoleAdds);
+    private void RemovePendingRoles() => RemoveValues(SelectedRoles, PendingRoleRemoves);
+    private void AddPendingUserPermissions() => AddValues(SelectedPermissions, PendingUserPermissionAdds);
+    private void RemovePendingUserPermissions() => RemoveValues(SelectedPermissions, PendingUserPermissionRemoves);
+    private void AddPendingRolePermissions() => AddValues(SelectedRolePermissions, PendingRolePermissionAdds);
+    private void RemovePendingRolePermissions() => RemoveValues(SelectedRolePermissions, PendingRolePermissionRemoves);
+
+    private static void AddValues(HashSet<string> target, IEnumerable<string> values)
+    {
+        foreach (var value in values.Where(value => !string.IsNullOrWhiteSpace(value)))
+            target.Add(value);
+    }
+
+    private static void RemoveValues(HashSet<string> target, IEnumerable<string> values)
+    {
+        foreach (var value in values.Where(value => !string.IsNullOrWhiteSpace(value)))
+            target.Remove(value);
+    }
+
+    private static string[] SelectedValues(ChangeEventArgs args) =>
+        args.Value switch
+        {
+            string[] values => values,
+            IEnumerable<string> values => values.ToArray(),
+            string value when !string.IsNullOrWhiteSpace(value) => new[] { value },
+            _ => Array.Empty<string>()
+        };
+
+    private async Task<bool> ConfirmAsync(string message) =>
+        await Js.InvokeAsync<bool>("confirm", new object[] { message });
+
+    private static bool Matches(string search, params string?[] values)
+    {
+        if (string.IsNullOrWhiteSpace(search))
+            return true;
+        return values.Any(value => !string.IsNullOrWhiteSpace(value) && value.Contains(search, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static string JoinOrDash(IEnumerable<string> values)
+    {
+        var list = values.Where(value => !string.IsNullOrWhiteSpace(value)).Distinct(StringComparer.OrdinalIgnoreCase).OrderBy(value => value).ToList();
+        return list.Count == 0 ? "-" : string.Join(", ", list);
+    }
+
+    private static string DisplayTenant(UserAdminRow user) =>
+        !string.IsNullOrWhiteSpace(user.TenantName) ? user.TenantName : !string.IsNullOrWhiteSpace(user.TenantId) ? user.TenantId : "-";
+
+    private static string ShortId(string id) =>
+        string.IsNullOrWhiteSpace(id) ? "-" : id.Length <= 12 ? id : id[..8] + "...";
+
+    private static string PermissionGroup(string permission)
+    {
+        if (string.IsNullOrWhiteSpace(permission))
+            return "General";
+        var separators = new[] { ':', '.', '/' };
+        var index = permission.IndexOfAny(separators);
+        return index > 0 ? permission[..index] : "General";
+    }
+
+    private static List<UserAdminRow> ParseUsers(string json) =>
+        ParseItems(json).Select(item => new UserAdminRow(
+            ReadString(item, "id", "userId"),
+            ReadString(item, "userName", "name", "email"),
+            ReadString(item, "tenantId"),
+            ReadString(item, "tenantName"),
+            ReadStringArray(item, "roles", "roleNames"),
+            ReadStringArray(item, "directPermissions", "permissions"))).Where(user => !string.IsNullOrWhiteSpace(user.Id)).ToList();
+
+    private static List<RoleAdminRow> ParseRoles(string json) =>
+        ParseItems(json).Select(item => new RoleAdminRow(
+            ReadString(item, "id", "roleId", "name"),
+            ReadString(item, "name", "roleName", "id"),
+            ReadStringArray(item, "permissions", "permissionNames"))).Where(role => !string.IsNullOrWhiteSpace(role.Name)).ToList();
+
+    private static List<PermissionAdminRow> ParsePermissions(string json) =>
+        ParseItems(json).Select(item => new PermissionAdminRow(
+            ReadString(item, "id", "permissionId", "name"),
+            ReadString(item, "name", "permissionName", "id"))).Where(permission => !string.IsNullOrWhiteSpace(permission.Name)).ToList();
+
+    private static IEnumerable<JsonElement> ParseItems(string json)
+    {
+        using var doc = JsonDocument.Parse(string.IsNullOrWhiteSpace(json) ? "[]" : json);
+        var root = doc.RootElement.Clone();
+        var source = Unwrap(root);
+        return source.ValueKind == JsonValueKind.Array
+            ? source.EnumerateArray().Select(item => item.Clone()).ToList()
+            : new List<JsonElement>();
+    }
+
+    private static JsonElement Unwrap(JsonElement element)
+    {
+        if (element.ValueKind != JsonValueKind.Object)
+            return element;
+        if (element.TryGetProperty("body", out var body))
+            return Unwrap(body);
+        if (element.TryGetProperty("data", out var data))
+            return Unwrap(data);
+        if (element.TryGetProperty("items", out var items))
+            return items;
+        return element;
+    }
+
+    private static string ReadString(JsonElement element, params string[] names)
+    {
+        foreach (var name in names)
+        {
+            if (!element.TryGetProperty(name, out var property) || property.ValueKind is JsonValueKind.Null or JsonValueKind.Undefined)
+                continue;
+            return property.ValueKind == JsonValueKind.String ? property.GetString() ?? "" : property.ToString();
+        }
+        return "";
+    }
+
+    private static IReadOnlyList<string> ReadStringArray(JsonElement element, params string[] names)
+    {
+        foreach (var name in names)
+        {
+            if (!element.TryGetProperty(name, out var property) || property.ValueKind != JsonValueKind.Array)
+                continue;
+            return property.EnumerateArray()
+                .Select(item => item.ValueKind == JsonValueKind.Object ? ReadString(item, "name", "roleName", "permissionName", "id") : item.ToString())
+                .Where(value => !string.IsNullOrWhiteSpace(value))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .OrderBy(value => value)
+                .ToList();
+        }
+        return Array.Empty<string>();
+    }
+
+    private sealed record UserAdminRow(string Id, string UserName, string TenantId, string TenantName, IReadOnlyList<string> Roles, IReadOnlyList<string> DirectPermissions);
+    private sealed record RoleAdminRow(string Id, string Name, IReadOnlyList<string> Permissions);
+    private sealed record PermissionAdminRow(string Id, string Name);
+}

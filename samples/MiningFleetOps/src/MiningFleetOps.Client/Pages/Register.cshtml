@@ -1,0 +1,31 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Register User";
+}
+
+<section class="panel narrow">
+    <h1>Register User</h1>
+    <form method="post" class="fields">
+        <label><span>User name</span><input asp-for="UserName" /></label>
+        <label><span>Password</span><input asp-for="Password" type="password" /></label>
+        <label><span>Tenant id</span><input asp-for="TenantId" /></label>
+        <label><span>Role</span><input asp-for="Role" /></label>
+        <button type="submit">Register</button>
+    </form>
+    @if (Model.HasError)
+    {
+        <div class="alert">
+            <strong>@Model.ErrorMessage</strong>
+            <details>
+                <summary>View logs</summary>
+                <pre>@Model.ResponseBody</pre>
+            </details>
+        </div>
+    }
+    else
+    {
+        <p class="status">HTTP @Model.LastStatusCode</p>
+        <pre>@Model.ResponseBody</pre>
+    }
+</section>

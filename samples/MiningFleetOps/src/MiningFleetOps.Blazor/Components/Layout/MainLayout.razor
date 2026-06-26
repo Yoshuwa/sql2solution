@@ -1,0 +1,114 @@
+﻿@inject ApiSession Session
+@inject Microsoft.JSInterop.IJSRuntime JS
+@using Microsoft.JSInterop
+@inherits LayoutComponentBase
+@implements IDisposable
+
+<div class="app-shell @(ApiCatalog.IsTopNavigation ? "top-nav" : "")">
+    <NavMenu />
+    <main>
+        <header class="topbar">
+            <div class="topbar-title">
+                <strong>MiningFleetOps.Blazor</strong>
+                <span>Blazor client for the generated ASP.NET Core API</span>
+            </div>
+            <div class="session">
+                <button type="button" class="button-icon theme-toggle" onclick="toggleTheme()" title="Toggle light or dark mode" aria-label="Toggle light or dark mode"><i class="fa-solid fa-circle-half-stroke"></i></button>
+                @if (Session.IsAuthenticated)
+                {
+                    <details class="account-menu">
+                        <summary class="account-trigger">
+                            <span class="user-name"><i class="fa-solid fa-user-shield"></i><span>@Session.UserName</span></span>
+                            @if (Session.IsImpersonating)
+                            {
+                                <span class="impersonation-badge"><i class="fa-solid fa-user-secret"></i><span>Impersonating</span></span>
+                            }
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </summary>
+                        <div class="account-dropdown">
+                            <div class="account-summary">
+                                <span class="account-avatar"><i class="fa-solid fa-user-shield"></i></span>
+                                <div>
+                                    <strong>@Session.UserName</strong>
+                                    <span>@(Session.IsImpersonating ? $"Impersonating user. Original admin: {Session.OriginalUserName}" : "Authenticated API session")</span>
+                                </div>
+                            </div>
+                            @if (Session.IsImpersonating)
+                            {
+                                <div class="impersonation-notice"><i class="fa-solid fa-user-secret"></i><span>Requests are being sent as this user until you return to the MasterAdmin session.</span></div>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(Session.TenantId))
+                            {
+                                <div class="account-detail"><i class="fa-solid fa-building-user"></i><span>Tenant</span><strong title="@Session.TenantId">@Session.TenantId</strong><button type="button" class="button-icon copy-button" title="Copy tenant id" aria-label="Copy tenant id" @onclick="() => CopyToClipboardAsync(Session.TenantId)"><i class="fa-regular fa-copy"></i></button></div>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(Session.UserId))
+                            {
+                                <div class="account-detail"><i class="fa-solid fa-id-badge"></i><span>User</span><strong title="@Session.UserId">@Session.UserId</strong><button type="button" class="button-icon copy-button" title="Copy user id" aria-label="Copy user id" @onclick="() => CopyToClipboardAsync(Session.UserId)"><i class="fa-regular fa-copy"></i></button></div>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(Session.TokenIssuedDisplay))
+                            {
+                                <div class="account-detail"><i class="fa-solid fa-key"></i><span>Issued</span><div class="account-value"><strong>@Session.TokenIssuedDisplay</strong><small>@Session.TokenIssuedRelativeDisplay</small></div></div>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(Session.TokenExpiresDisplay))
+                            {
+                                <div class="account-detail"><i class="fa-solid fa-hourglass-half"></i><span>Expires</span><div class="account-value"><strong>@Session.TokenExpiresDisplay</strong><small>@Session.TokenExpiresRelativeDisplay</small></div></div>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(Session.RefreshTokenStoredDisplay))
+                            {
+                                <div class="account-detail"><i class="fa-solid fa-rotate"></i><span>Refresh</span><div class="account-value"><strong>@Session.RefreshTokenStoredDisplay</strong><small>@Session.RefreshTokenStoredRelativeDisplay</small></div></div>
+                            }
+                            @if (Session.IsImpersonating)
+                            {
+                                <button type="button" class="button-secondary account-logout" @onclick="StopImpersonatingAsync"><i class="fa-solid fa-user-check"></i><span>Return to MasterAdmin</span></button>
+                            }
+                            <button type="button" class="account-logout" @onclick="LogoutAsync"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Logout</span></button>
+                        </div>
+                    </details>
+                }
+                else if (ApiCatalog.HasAuthentication)
+                {
+                    <a class="button" href="login"><i class="fa-solid fa-right-to-bracket"></i><span>Sign in</span></a>
+                }
+            </div>
+        </header>
+        <article class="content">
+            @Body
+        </article>
+    </main>
+</div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        Session.StateChanged += OnSessionChanged;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+            await Session.RestoreAsync();
+    }
+
+    private async Task LogoutAsync()
+    {
+        await Session.LogoutAsync();
+    }
+
+    private async Task StopImpersonatingAsync()
+    {
+        await Session.StopImpersonatingAsync();
+    }
+
+    private async Task CopyToClipboardAsync(string? value)
+    {
+        if (!string.IsNullOrWhiteSpace(value))
+            await JS.InvokeVoidAsync("copyToClipboard", value);
+    }
+
+    private void OnSessionChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose()
+    {
+        Session.StateChanged -= OnSessionChanged;
+    }
+}

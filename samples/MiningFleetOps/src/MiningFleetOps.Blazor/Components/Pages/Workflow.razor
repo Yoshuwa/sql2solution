@@ -1,0 +1,207 @@
+﻿@page "/workflow"
+@inject ApiSession Session
+@using System.Text.Json
+
+<section class="panel">
+    <div class="resource-header">
+        <div>
+            <h1>Workflow Designer</h1>
+            <p>Design resource state machines, allowed roles, and scheduled follow-up actions.</p>
+        </div>
+        <button type="button" @onclick="LoadAsync" disabled="@IsBusy"><i class="fa-solid fa-rotate"></i><span>Refresh</span></button>
+    </div>
+
+    @if (IsBusy)
+    {
+        <div class="loader-line">
+            <span class="spinner" aria-hidden="true"></span>
+            <span>Loading workflows...</span>
+        </div>
+    }
+    else if (!string.IsNullOrWhiteSpace(StatusMessage))
+    {
+        <p class="status">@StatusMessage</p>
+    }
+
+    @if (Definitions.Count == 0 && !IsBusy)
+    {
+        <p class="status">No readable workflow resources are available for this session.</p>
+    }
+    else
+    {
+        <div class="resource-grid">
+            @foreach (var definition in Definitions)
+            {
+                <button type="button" class="resource-card workflow-resource-button @(Selected?.Resource == definition.Resource ? "selected" : "")" @onclick="() => Select(definition)">
+                    <strong><i class="fa-solid fa-diagram-project"></i> @definition.DisplayName</strong>
+                    <span>Status field: @definition.StatusField</span>
+                    <span>@definition.Transitions.Count transition(s)</span>
+                </button>
+            }
+        </div>
+    }
+</section>
+
+@if (Selected is not null)
+{
+    <section class="panel">
+        <div class="section-title">
+            <h2>@Selected.DisplayName</h2>
+            <a class="button-secondary compact-button" href="@($"resources/{Selected.Resource}")">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i><span>Open resource</span>
+            </a>
+        </div>
+        <div class="form-grid">
+            <label>Display name <input @bind="Selected.DisplayName" /></label>
+            <label>Status field <input @bind="Selected.StatusField" /></label>
+            <label class="checkbox-label"><input type="checkbox" @bind="Selected.IsEnabled" /> Enabled</label>
+        </div>
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Action</th>
+                        <th>From</th>
+                        <th>To</th>
+                        <th>Roles</th>
+                        <th>Countdown</th>
+                        <th>Then</th>
+                        <th>Command</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var action in Selected.Transitions)
+                    {
+                        <tr>
+                            <td><input @bind="action.Action" /></td>
+                            <td><input @bind="action.FromStatus" /></td>
+                            <td><input @bind="action.ToStatus" /></td>
+                            <td><input @bind="action.RolesCsv" placeholder="Admin, User" /></td>
+                            <td><input type="number" min="0" @bind="action.DelaySeconds" /></td>
+                            <td><input @bind="action.DelayedAction" placeholder="Complete" /></td>
+                            <td><button type="button" class="button-secondary compact-button" @onclick="() => RemoveTransition(action)"><i class="fa-solid fa-trash"></i><span>Remove</span></button></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="inline-form">
+            <button type="button" class="button-secondary icon-text-button" @onclick="AddTransition"><i class="fa-solid fa-plus"></i><span>Add transition</span></button>
+            <button type="button" class="icon-text-button" @onclick="SaveAsync" disabled="@IsBusy"><i class="fa-solid fa-floppy-disk"></i><span>Save workflow</span></button>
+        </div>
+    </section>
+}
+
+@code {
+    private readonly JsonSerializerOptions JsonOptions = new() { PropertyNameCaseInsensitive = true };
+    private List<WorkflowDefinitionView> Definitions { get; set; } = new();
+    private WorkflowDefinitionView? Selected { get; set; }
+    private bool IsBusy { get; set; }
+    private string StatusMessage { get; set; } = "";
+
+    protected override async Task OnInitializedAsync() => await LoadAsync();
+
+    private async Task LoadAsync()
+    {
+        IsBusy = true;
+        StatusMessage = "";
+        try
+        {
+            var result = await Session.SendAsync(HttpMethod.Get, "api/workflows");
+            if (!result.Success)
+            {
+                StatusMessage = string.IsNullOrWhiteSpace(result.UserMessage) ? "Unable to load workflow definitions." : result.UserMessage;
+                return;
+            }
+
+            var envelope = JsonSerializer.Deserialize<ApiEnvelope<List<WorkflowDefinitionView>>>(result.Body, JsonOptions);
+            Definitions = envelope?.Body ?? new();
+            Selected = Definitions.FirstOrDefault(x => Selected is not null && x.Resource == Selected.Resource) ?? Definitions.FirstOrDefault();
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    private void Select(WorkflowDefinitionView definition) => Selected = definition;
+
+    private void AddTransition()
+    {
+        if (Selected is null) return;
+        Selected.Transitions.Add(new WorkflowTransitionView
+        {
+            Action = "Submit",
+            FromStatus = "Draft",
+            ToStatus = "Submitted",
+            RolesCsv = "Admin"
+        });
+    }
+
+    private void RemoveTransition(WorkflowTransitionView transition)
+    {
+        Selected?.Transitions.Remove(transition);
+    }
+
+    private async Task SaveAsync()
+    {
+        if (Selected is null) return;
+        IsBusy = true;
+        try
+        {
+            var body = new
+            {
+                Selected.DisplayName,
+                Selected.StatusField,
+                Selected.IsEnabled,
+                transitions = Selected.Transitions.Select(x => new
+                {
+                    x.Action,
+                    x.FromStatus,
+                    x.ToStatus,
+                    roles = x.RolesCsv.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries),
+                    x.DelaySeconds,
+                    x.DelayedAction
+                }).ToArray()
+            };
+            var result = await Session.SendAsync(HttpMethod.Put, $"api/workflows/{Uri.EscapeDataString(Selected.Resource)}", body);
+            StatusMessage = result.Success ? "Workflow saved." : result.UserMessage;
+            await LoadAsync();
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    private sealed class ApiEnvelope<T>
+    {
+        public int Code { get; set; }
+        public string Message { get; set; } = "";
+        public T? Body { get; set; }
+    }
+
+    private sealed class WorkflowDefinitionView
+    {
+        public string Resource { get; set; } = "";
+        public string DisplayName { get; set; } = "";
+        public string StatusField { get; set; } = "";
+        public bool IsEnabled { get; set; } = true;
+        public List<WorkflowTransitionView> Transitions { get; set; } = new();
+    }
+
+    private sealed class WorkflowTransitionView
+    {
+        public string Action { get; set; } = "";
+        public string FromStatus { get; set; } = "";
+        public string ToStatus { get; set; } = "";
+        public IReadOnlyList<string> Roles
+        {
+            get => RolesCsv.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            set => RolesCsv = string.Join(", ", value ?? Array.Empty<string>());
+        }
+        public string RolesCsv { get; set; } = "";
+        public int DelaySeconds { get; set; }
+        public string DelayedAction { get; set; } = "";
+    }
+}

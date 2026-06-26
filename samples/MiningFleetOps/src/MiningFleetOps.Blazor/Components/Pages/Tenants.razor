@@ -1,0 +1,52 @@
+﻿@page "/tenants"
+@inject ApiSession Session
+
+<section class="panel">
+    <div class="panel-heading">
+        <div>
+            <h1>Tenants</h1>
+            <p>Manage tenant records through the generated auth API.</p>
+        </div>
+        <button type="button" @onclick="LoadAsync" disabled="@IsBusy">Load</button>
+    </div>
+    <div class="fields">
+        <label><span>Tenant name</span><input @bind="TenantName" /></label>
+        <button type="button" @onclick="CreateAsync" disabled="@IsBusy">Create tenant</button>
+        <label><span>Tenant id</span><input @bind="TenantId" /></label>
+        <div class="command-stack">
+            <button type="button" @onclick="EnableAsync" disabled="@IsBusy">Enable</button>
+            <button type="button" class="button-danger" @onclick="DisableAsync" disabled="@IsBusy">Disable</button>
+        </div>
+    </div>
+</section>
+
+<section class="panel">
+    <h2>Response</h2>
+    @if (!string.IsNullOrWhiteSpace(StatusMessage))
+    {
+        <p class="status">@StatusMessage</p>
+    }
+    <pre>@ResponseBody</pre>
+</section>
+
+@code {
+    private string TenantName { get; set; } = "";
+    private string TenantId { get; set; } = "";
+    private string StatusMessage { get; set; } = "";
+    private string ResponseBody { get; set; } = "";
+    private bool IsBusy { get; set; }
+
+    private Task LoadAsync() => SendAsync(HttpMethod.Get, "api/auth/tenants", null, "Tenants loaded.");
+    private Task CreateAsync() => SendAsync(HttpMethod.Post, "api/auth/tenants", new { name = TenantName }, "Tenant created.");
+    private Task EnableAsync() => SendAsync(HttpMethod.Post, $"api/auth/tenants/{Uri.EscapeDataString(TenantId)}/enable", null, "Tenant enabled.");
+    private Task DisableAsync() => SendAsync(HttpMethod.Post, $"api/auth/tenants/{Uri.EscapeDataString(TenantId)}/disable", null, "Tenant disabled.");
+
+    private async Task SendAsync(HttpMethod method, string path, object? body, string successMessage)
+    {
+        IsBusy = true;
+        var result = await Session.SendAsync(method, path, body);
+        ResponseBody = result.Body;
+        StatusMessage = result.Success ? successMessage : result.UserMessage;
+        IsBusy = false;
+    }
+}

@@ -1,0 +1,5 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\MiningFleetOps.Domain\MiningFleetOps.Domain.csproj" />
+  </ItemGroup>
+</Project>

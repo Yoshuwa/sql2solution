@@ -1,0 +1,44 @@
+﻿@page "/login"
+@inject ApiSession Session
+
+<section class="panel auth-panel">
+    <h1>Sign in</h1>
+    @if (Session.IsAuthenticated)
+    {
+        <p>Signed in as @Session.UserName.</p>
+        <button type="button" @onclick="LogoutAsync">Logout</button>
+    }
+    else
+    {
+        <label>User name</label>
+        <input @bind="UserName" />
+        <label>Password</label>
+        <input type="password" @bind="Password" />
+        <button type="button" @onclick="LoginAsync" disabled="@IsBusy">Sign in</button>
+    }
+    @if (!string.IsNullOrWhiteSpace(StatusMessage))
+    {
+        <p class="status">@StatusMessage</p>
+    }
+</section>
+
+@code {
+    private string UserName { get; set; } = "admin@example.com";
+    private string Password { get; set; } = "";
+    private string StatusMessage { get; set; } = "";
+    private bool IsBusy { get; set; }
+
+    private async Task LoginAsync()
+    {
+        IsBusy = true;
+        var result = await Session.LoginAsync(UserName, Password);
+        StatusMessage = result.Success ? "Signed in." : result.UserMessage;
+        IsBusy = false;
+    }
+
+    private async Task LogoutAsync()
+    {
+        await Session.LogoutAsync();
+        StatusMessage = "Signed out.";
+    }
+}
